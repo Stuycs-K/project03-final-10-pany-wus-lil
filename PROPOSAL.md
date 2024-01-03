@@ -2,11 +2,33 @@
 
 ## Group Members:
 
-names here.
+Yuchen Pan, 
        
 # Intentions:
 
-A statement of the problem you are solving and/or a high level description of the project.
+Uno card game
+For at least two players, the server distributes 7 cards to each player. 
+Cards are displayed to the players in texts. (Ex: r4, b7)
+Order will be randomly selected. 
+Player 1 takes the first turn, player 2 takes the second turn, etc
+
+Turn ends when:
+the client plays a card
+the client draws at least one card and types “end”
+the client has 0 cards in their hand
+
+Error when:
+play a card that is invalid or does not exist
+play a different card from the card the player drew
+
+When someone has 1 card, UNO is announced to all players
+
+The game ends when: 
+a player has 0 cards
+
+After a player wins, the server tells all clients who won
+Shut down the server and attach clients
+
     
 # Intended usage:
 
