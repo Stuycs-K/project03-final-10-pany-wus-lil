@@ -81,9 +81,9 @@ Server Setup (# of players, 7 cards each, set order of turns)
 Client (play a card, draw a card, end turn)
 (sub)Server (read from client, write what was played, next player)
 
-Yuchen -
+Yuchen - server setup, signals/premature client quitting
 
-Sherlyn -
+Sherlyn - client/turn implementation, card drawing, game end
 
 Lisa - create deck of cards or creating random cards, randomly create lists of 7 cards, semaphore implementation, lexical sorting at beginning.
 
