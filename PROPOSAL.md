@@ -2,7 +2,7 @@
 
 ## Group Members:
 
-Yuchen Pan, 
+Yuchen Pan, Sherlyn Wu, Lisa Li
        
 # Intentions:
 
@@ -52,16 +52,47 @@ A description as to how the project will be used (describe the user interface).
   
 # Technical Details:
 
-A description of your technical design. This should include:
-   
-How you will be using the topics covered in class in the project.
-     
-How you are breaking down the project and who is responsible for which parts.
-  
-What data structures you will be using and how.
-     
-What algorithms and /or data structures you will be using, and how.
-    
-# Intended pacing:
+KEY CONCEPTS: 
 
-A timeline with expected completion dates of parts of the project.
+Semaphores will be used to only allow a certain number of clients (requested by the server) to join/play the game at any given time. 
+
+The server will fork/create subservers that will individually communicate with each client regarding the cards on hand and what the client chooses to play.
+
+Signals will be used to allow clients to prematurely quit the game. Unsure if the entire game should end when a client quits or if the server will reconfigure the turns and continue the game.
+
+Sockets will allow for clients to communicate to the (sub)server what card they would like play, if they want to draw a card, and if they want to end their turn. 
+
+Files/Shared Memory might be used to communicate the last played card (or the starting card) or the entire play history to all the clients.
+
+     
+DATA STRUCTURES/ALGORITHMS:
+
+We will use lexcial sorting to sort the clients' hands by color (this should occur at the beginning when cards are dealt).
+
+We will probably use either singly or doubly linked lists to implement the sorting and display of the hand (cards are structs). This will make removing a card at the center of the list much easier as linked lists are dynamic. When a new card is added, it'll insert by color (but the numbers will out of order).
+- could also replace that with arrays
+
+Stacks could be used to store the play history of the match. This would mean that the most recently played card will be at the top of the stack (can use peek()). 
+
+
+WHO DOES WHAT:
+Breakdown: 
+Server Setup (# of players, 7 cards each, set order of turns)
+Client (play a card, draw a card, end turn)
+(sub)Server (read from client, write what was played, next player)
+
+Yuchen -
+
+Sherlyn -
+
+Lisa - create deck of cards or creating random cards, randomly create lists of 7 cards, semaphore implementation, lexical sorting at beginning.
+
+
+# Intended pacing:
+Start: Jan 4 class
+Jan 4/5 - simple server setup, simple client program, card deck, semaphore
+Jan 8/9/10 - deal cards to clients, sockets, discarded pile (show last played)
+Jan 11/12 - draw card and play?, uno, signals, display winner
+Jan 14/15 - testing, rehearsing for presentation, make sure to test on lab machine
+End: Jan 16 8am
+
