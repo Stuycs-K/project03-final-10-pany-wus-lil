@@ -48,18 +48,21 @@ void randomCard(int n){
     cC = rand() % 4;
     cN = rand() % 10;
     //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
-    printf("random card: %c%d\n", cardColor[cC], cardNumber[cN]);
+    printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
     //struct card * tmp = create(cardColor[cC], cardNumber[cN]);
     //printCard(tmp);
     n--;
   }
 }
 
+void drawCard(){
+  randomCard(1);
+}
+
 int main() {
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
-    char* PORT = "9998";
-
+    char* PORT = "9998"
     hints->ai_family = AF_INET;
     hints->ai_socktype = SOCK_STREAM; // TCP socket
     hints->ai_flags = AI_PASSIVE; // only needed on server
@@ -123,7 +126,7 @@ int main() {
                 printf("Client connected.\n");
             }
         }
-        //wait for 3 (max num) clients 
+        //wait for 3 (max num) clients
         for (int i = 0; i < MAX_CLIENTS; ++i) {
             if (client_sockets[i] > 0 && FD_ISSET(client_sockets[i], &read_fds)) {
                 char buff[1025] = "";
@@ -149,5 +152,15 @@ int main() {
 
     free(hints);
     freeaddrinfo(results);
+
+    struct card * a = create('v', 3);
+    printCard(a);
+    printf("creating 7 random cards\n");
+    randomCard(7);
+    printf("drawing a card\n");
+    drawCard();
+    
     return 0;
+
+
 }
