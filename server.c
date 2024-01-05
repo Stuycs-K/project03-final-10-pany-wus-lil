@@ -112,9 +112,8 @@ int main() {
 
         if (FD_ISSET(listen_socket, &read_fds)) {
             int client_socket = accept(listen_socket, (struct sockaddr*)&client_address, &sock_size);
-
             if (client_socket > 0) {
-                // Add the new client socket to the array
+                // Add the client if there's a client trying to connect
                 for (int i = 0; i < MAX_CLIENTS; ++i) {
                     if (client_sockets[i] == 0) {
                         client_sockets[i] = client_socket;
@@ -124,17 +123,19 @@ int main() {
                 printf("Client connected.\n");
             }
         }
-        //wait for 3 clients 
+        //wait for 3 (max num) clients 
         for (int i = 0; i < MAX_CLIENTS; ++i) {
             if (client_sockets[i] > 0 && FD_ISSET(client_sockets[i], &read_fds)) {
                 char buff[1025] = "";
+                //read the whole thing
                 read(client_sockets[i], buff, sizeof(buff) - 1);
+                //trim
                 buff[strlen(buff) - 1] = '\0';
                 if (buff[strlen(buff) - 1] == 13) {
                     buff[strlen(buff) - 1] = '\0';
                 }
                 printf("Received from client %d: '%s'\n", i + 1, buff);
-                //handle clinet message
+                //handle clinet message later here
             }
         }
     }
