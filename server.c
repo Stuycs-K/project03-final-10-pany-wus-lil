@@ -40,16 +40,23 @@ void randomCard(int n){
     cC = rand() % 4;
     cN = rand() % 10;
     //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
-    printf("random card: %c%d\n", cardColor[cC], cardNumber[cN]);
+    printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
     //struct card * tmp = create(cardColor[cC], cardNumber[cN]);
     //printCard(tmp);
     n--;
   }
 }
 
+void drawCard(){
+  randomCard(1);
+}
+
 int main() {
 
   struct card * a = create('v', 3);
   printCard(a);
-  randomCard(2);
+  printf("creating 7 random cards\n");
+  randomCard(7);
+  printf("drawing a card\n");
+  drawCard();
 }
