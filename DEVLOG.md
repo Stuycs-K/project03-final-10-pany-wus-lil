@@ -1,12 +1,12 @@
 # Dev Log:
 
-## Player 1
+## Yuchen Pan
 
-### 2024-01-02 - Brief description
-Expanded description including how much time was spent on task.
+### 2024-01-03 - Proposal
+Finished the description of the project and how we adjusted the uno game rules to implement our project
 
-### 2024-01-03 - Brief description
-Expanded description including how much time was spent on task.
+### 2024-01-04 - Server Setup
+Set up server that allow multiple clients to connect, the for loop add the client if it's trying to connect and wait until the all the clients are connected. 
 
 ## Lisa Li
 
