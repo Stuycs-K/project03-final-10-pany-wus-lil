@@ -14,6 +14,7 @@
 struct card {
   char color;
   int number;
+  struct card *next;
 };
 
 struct card * create(char _color, int _number){
@@ -21,6 +22,18 @@ struct card * create(char _color, int _number){
   tmp->color = _color;
   tmp->number = _number;
   return tmp;
+}
+
+void printCards(struct card * hand) {
+  printf("printing cards\n");
+  int count = 0;
+  while (hand != NULL) {
+    printf("%c%d\n", hand->color, hand->number);
+    count++;
+    hand = hand->next;
+  }
+  printf("total: %d cards\n", count);
+
 }
 
 void printCard(struct card * _card){
@@ -147,7 +160,25 @@ int main() {
         if (client_sockets[2] != 0) {
             printf("All 3 clients have connected.\n");
             for (int i = 0; i < MAX_CLIENTS; i++) {
+                /**
+                 plan: For every cycle of the loop, i is the client whose turn it is
+                 all clients read isturn from the server
+                 if isturn, that client writes its card to the server
+                 if !isturn, that client doesn't do anything
+                **/
+                char* isturn_y = "y";
+                char* isturn_n = "n";
                 char buff[1025] = "";
+                for (int j = 0; j < MAX_CLIENTS; j++) {
+                    // if isturn
+                    if (j == i) {
+                        write(client_sockets[j], isturn_y, strlen(isturn_y));
+                    } else {
+                        write(client_sockets[j], isturn_n, strlen(isturn_n));
+                    }
+                }
+
+                /**
                 //read the whole thing
                 read(client_sockets[i], buff, sizeof(buff) - 1);
                 //trim
@@ -155,7 +186,7 @@ int main() {
                 if (buff[strlen(buff) - 1] == 13) {
                     buff[strlen(buff) - 1] = '\0';
                 }
-                printf("Received from client %d: '%s'\n", i + 1, buff);
+                printf("Received from client %d: '%s'\n", i + 1, buff);**/
             }
         }
     }
@@ -170,13 +201,23 @@ int main() {
     free(hints);
     freeaddrinfo(results);
 
-    struct card * a = create('v', 3);
-    printCard(a);
-    printf("creating 7 random cards\n");
-    randomCard(7);
-    printf("drawing a card\n");
-    drawCard();
-    
+    struct card * a;
+    a->color = 'r';
+    a->number = 3;
+    a->next = NULL;
+
+    struct card * b;
+    b->color = 'y';
+    b->number = 9;
+    a->next = b;
+    printCards(a);
+    //a->next = b;
+    //printCards(a);
+    //printf("creating 7 random cards\n");
+    //randomCard(7);
+    //printf("drawing a card\n");
+    //drawCard();
+
     return 0;
 
 
