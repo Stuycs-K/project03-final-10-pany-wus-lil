@@ -15,3 +15,16 @@ Able to create a specific card provided that the color and number is given or pr
 
 ### 2024-01-03 - Brief description
 Expanded description including how much time was spent on task.
+
+## Sherlyn Wu
+
+### 2024-01-03 - Proposal
+Worked on what Uno features would be implemented and how
+
+### 2024-01-04 - Client setup
+Set up basic client
+
+### 2024-01-05 - Client-Server behavior
+Client is able to connect to server
+Server prints message when all three clients are connected and write to it
+~ 1 hour
