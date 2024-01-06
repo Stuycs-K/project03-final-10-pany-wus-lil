@@ -3,19 +3,20 @@
 
 void clientLogic(int server_socket) {
   while (1) {
-  sleep(1);
-  char* data = calloc(100,sizeof(char));
-  read(server_socket,data,100);
-  // if isturn
-  //printf("received from server: %s\n", data);
-  if (strcmp(data,"y") == 0) {
-    printf("Enter card you want to play: ");
-    fgets(data,100,stdin);
-    write(server_socket,data,strlen(data));
-  } else {
-    // if not your turn
-    printf("It is not your turn.\n");
-  }
+    sleep(1); // prevents spam
+    char* data = calloc(100,sizeof(char));
+    debug("client is trying to read\n");
+    read(server_socket,data,100);
+    // if isturn
+    //printf("received from server: %s\n", data);
+    if (strcmp(data,"y") == 0) {
+      printf("Enter card you want to play: ");
+      fgets(data,100,stdin);
+      write(server_socket,data,strlen(data));
+    } else {
+      // if not your turn
+      printf("It is not your turn.\n");
+    }
   }
     /**
     char* data = calloc(100,sizeof(char));

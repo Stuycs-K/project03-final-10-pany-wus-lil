@@ -9,7 +9,20 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "networking.h"
+
 #define MAX_CLIENTS 3
+
+/**
+TODO LIST
+-A function that kills the clients when the server receives the signal to die
+-Encapsulate
+-fork server so it's not stuck handling all 3 clients in order
+ 
+TEMPORARY MEASURES
+-sleep(1) in client.c to prevent client from spamming
+-sleep(1) in server.c to ensure client writes before server attempts to read
+**/
 
 struct card {
   char color;
@@ -141,7 +154,8 @@ int main() {
                         break;
                     }
                 }
-                printf("Client connected.\n");
+                //printf("Client connected.\n"); uncomment when done debugging
+                printf("Client %d connected.\n",client_socket);
             }
         }
 
@@ -178,8 +192,12 @@ int main() {
                     //printf("Card on deck: %s\n",toppadeck);
                     // if isturn
                     if (j == i) {
+                        debug("server attempting to write to client\n");
                         write(client_sockets[j], isturn_y, strlen(isturn_y));
+                        debug("server successfully wrote to client\n");
                         //read the whole thing
+                        sleep(1); // prevents server from reading from nothing
+                        debug("server attempting to read from client\n");
                         read(client_sockets[i], buff, sizeof(buff) - 1);
                         //trim
                         buff[strlen(buff) - 1] = '\0';
