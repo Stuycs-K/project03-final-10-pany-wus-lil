@@ -62,7 +62,7 @@ void drawCard(){
 int main() {
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
-    char* PORT = "9998"
+    char* PORT = "9998";
     hints->ai_family = AF_INET;
     hints->ai_socktype = SOCK_STREAM; // TCP socket
     hints->ai_flags = AI_PASSIVE; // only needed on server
@@ -126,6 +126,7 @@ int main() {
                 printf("Client connected.\n");
             }
         }
+
         //wait for 3 (max num) clients
         for (int i = 0; i < MAX_CLIENTS; ++i) {
             if (client_sockets[i] > 0 && FD_ISSET(client_sockets[i], &read_fds)) {
@@ -139,6 +140,40 @@ int main() {
                 }
                 printf("Received from client %d: '%s'\n", i + 1, buff);
                 //handle clinet message later here
+            }
+        }
+
+        // code to test a basic turn
+        if (client_sockets[2] != 0) {
+            printf("All 3 clients have connected.\n");
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                /**
+                 plan: For every cycle of the loop, i is the client whose turn it is
+                 all clients read isturn from the server
+                 if isturn, that client writes its card to the server
+                 if !isturn, that client doesn't do anything
+                **/
+                char* isturn_y = "y";
+                char* isturn_n = "n";
+                char buff[1025] = "";
+                for (int j = 0; j < MAX_CLIENTS; j++) {
+                    // if isturn
+                    if (j == i) {
+                        write(client_sockets[j], isturn_y, strlen(isturn_y));
+                    } else {
+                        write(client_sockets[j], isturn_n, strlen(isturn_n));
+                    }
+                }
+
+/**
+                //read the whole thing
+                read(client_sockets[i], buff, sizeof(buff) - 1);
+                //trim
+                buff[strlen(buff) - 1] = '\0';
+                if (buff[strlen(buff) - 1] == 13) {
+                    buff[strlen(buff) - 1] = '\0';
+                }
+                printf("Player %d played: '%s'\n", i + 1, buff);**/
             }
         }
     }
