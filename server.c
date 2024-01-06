@@ -107,7 +107,12 @@ int main() {
     fd_set read_fds;
     int client_sockets[MAX_CLIENTS] = {0}; // Array to store client sockets
 
+    // temporary variable to store the card on top of the deck
+    //char* toppadeck = calloc(100,sizeof(char));
+    //toppadeck = "soy first card";
+
     while (1) {
+        
         FD_ZERO(&read_fds);
         FD_SET(STDIN_FILENO, &read_fds);
         FD_SET(listen_socket, &read_fds);
@@ -170,26 +175,29 @@ int main() {
                 char* isturn_n = "n";
                 char buff[1025] = "";
                 for (int j = 0; j < MAX_CLIENTS; j++) {
+                    //printf("Card on deck: %s\n",toppadeck);
                     // if isturn
                     if (j == i) {
                         write(client_sockets[j], isturn_y, strlen(isturn_y));
+                        //read the whole thing
+                        read(client_sockets[i], buff, sizeof(buff) - 1);
+                        //trim
+                        buff[strlen(buff) - 1] = '\0';
+                        if  (buff[strlen(buff) - 1] == 13) {
+                            buff[strlen(buff) - 1] = '\0';
+                        }
+                        //strcpy(toppadeck,buff);
+                        printf("Received from client %d: '%s'\n", i + 1, buff);
                     } else {
                         write(client_sockets[j], isturn_n, strlen(isturn_n));
                     }
                 }
-
-                /**
-                //read the whole thing
-                read(client_sockets[i], buff, sizeof(buff) - 1);
-                //trim
-                buff[strlen(buff) - 1] = '\0';
-                if (buff[strlen(buff) - 1] == 13) {
-                    buff[strlen(buff) - 1] = '\0';
-                }
-                printf("Received from client %d: '%s'\n", i + 1, buff);**/
             }
+            printf("Round over\n");
         }
     }
+
+    printf("server killed\n");
 
     // Close client sockets
     for (int i = 0; i < MAX_CLIENTS; ++i) {
