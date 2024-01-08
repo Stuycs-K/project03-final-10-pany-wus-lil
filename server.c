@@ -14,6 +14,7 @@
 struct card {
   char color;
   int number;
+  struct card *next;
 };
 
 struct card * create(char _color, int _number){
@@ -23,7 +24,19 @@ struct card * create(char _color, int _number){
   return tmp;
 }
 
-void printCard(struct card * _card){
+void printCards(struct card * hand) {
+  printf("printing cards\n");
+  int count = 0;
+  while (hand != NULL) {
+    printf("%c%d\n", hand->color, hand->number);
+    count++;
+    hand = hand->next;
+  }
+  printf("total: %d cards\n", count);
+
+}
+
+/*void printCard(struct card * _card){
   char info[3];
   char cardColor = _card->color;
   info[0] = cardColor;
@@ -57,12 +70,12 @@ void randomCard(int n){
 
 void drawCard(){
   randomCard(1);
-}
+}*/
 
 int main() {
-    struct addrinfo *hints, *results;
+    /*struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
-    char* PORT = "9998"
+    char* PORT = "9998";
     hints->ai_family = AF_INET;
     hints->ai_socktype = SOCK_STREAM; // TCP socket
     hints->ai_flags = AI_PASSIVE; // only needed on server
@@ -152,14 +165,24 @@ int main() {
 
     free(hints);
     freeaddrinfo(results);
+*/
+    struct card * a;
+    a->color = 'r';
+    a->number = 3;
+    a->next = NULL;
 
-    struct card * a = create('v', 3);
-    printCard(a);
-    printf("creating 7 random cards\n");
-    randomCard(7);
-    printf("drawing a card\n");
-    drawCard();
-    
+    struct card * b;
+    b->color = 'y';
+    b->number = 9;
+    a->next = b;
+    printCards(a);
+    //a->next = b;
+    //printCards(a);
+    //printf("creating 7 random cards\n");
+    //randomCard(7);
+    //printf("drawing a card\n");
+    //drawCard();
+
     return 0;
 
 
