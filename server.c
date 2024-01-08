@@ -139,6 +139,7 @@ int main() {
                 printf("Client connected.\n");
             }
         }
+
         //wait for 3 (max num) clients
         for (int i = 0; i < MAX_CLIENTS; ++i) {
             if (client_sockets[i] > 0 && FD_ISSET(client_sockets[i], &read_fds)) {
@@ -152,6 +153,22 @@ int main() {
                 }
                 printf("Received from client %d: '%s'\n", i + 1, buff);
                 //handle clinet message later here
+            }
+        }
+
+        // code to test a basic turn
+        if (client_sockets[2] != 0) {
+            printf("All 3 clients have connected.\n");
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                char buff[1025] = "";
+                //read the whole thing
+                read(client_sockets[i], buff, sizeof(buff) - 1);
+                //trim
+                buff[strlen(buff) - 1] = '\0';
+                if (buff[strlen(buff) - 1] == 13) {
+                    buff[strlen(buff) - 1] = '\0';
+                }
+                printf("Received from client %d: '%s'\n", i + 1, buff);
             }
         }
     }

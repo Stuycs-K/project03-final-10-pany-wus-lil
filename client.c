@@ -2,17 +2,15 @@
 #include <ctype.h>
 
 void clientLogic(int server_socket) {
-    printf("Write a string to convert: ");
-    //char* data = calloc(100,sizeof(char));
-    //fgets(data,100,stdin);
-    char* data = "testing";
-    printf("Client attemping to write to server\n");
-    write(server_socket,data,strlen(data));
-    printf("Client wrote to server\n");
-    printf("Client attempting to read server\n");
+    char* data = calloc(100,sizeof(char));
+    /**
+    printf("Enter card you want to play: ");
+    fgets(data,100,stdin);
+    printf("\n");
+    write(server_socket,data,strlen(data));**/
     read(server_socket,data,8);
-    //data[strlen(data)-1] = ' ';
-    printf("Client read: %s\n",data);
+    // c'est un trimmer
+    // data[strlen(data)-1] = ' ';
 }
 
 int clienthandshake(char* server_address) {
@@ -43,7 +41,8 @@ int main(int argc, char *argv[] ) {
   
   int server_socket = clienthandshake(ID);
 
-  printf("client connected.\n");
-  //clientLogic(server_socket);
+  //printf("client connected.\n");
+  clientLogic(server_socket);
+
   close(server_socket);
 }
