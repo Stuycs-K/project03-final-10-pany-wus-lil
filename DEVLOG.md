@@ -6,7 +6,10 @@
 Finished the description of the project and how we adjusted the uno game rules to implement our project
 
 ### 2024-01-04 - Server Setup
-Set up server that allow multiple clients to connect, the for loop add the client if it's trying to connect and wait until the all the clients are connected.
+Set up the server that allows multiple clients to connect, the for loop add the client if it's trying to connect, and wait until all the clients are connected.
+
+### 2024-01-05 - Signals
+Use signals to handle client quitting using ctrl c or quitting by disconnecting - when byte = 0, fd is removed
 
 ## Lisa Li
 
