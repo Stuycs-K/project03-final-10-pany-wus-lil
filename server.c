@@ -14,15 +14,37 @@
 struct card {
   char color;
   int number;
-  struct card *next;
+  struct card * next;
 };
 
-struct card * create(char _color, int _number){
+/*struct card * add(struct card * head, struct card * tail, char _color, int _number){
   struct card * tmp;
   tmp->color = _color;
   tmp->number = _number;
+  tmp->next = head;
+  if (head == NULL) {
+      head = tmp;
+      tail = tmp;
+  } else {
+      tail->next = tmp;
+      tail = tmp;
+  }
   return tmp;
-}
+}*/
+
+/*void printCard(struct card * _card){
+  char info[3];
+  char cardColor = _card->color;
+  info[0] = cardColor;
+  //printf("info[0]: %c\n", info[0]);
+  info[1] = _card->number + '0';
+  //printf("info[1]: %c\n", info[1]);
+  info[2] = '\0';
+  //printf("info[2]: %c\n", info[2]);
+  char * cardData = info;
+  //printf("info: %s\n", info);
+  printf("your card is: %s\n", cardData);
+}*/
 
 void printCards(struct card * hand) {
   printf("printing cards\n");
@@ -185,14 +207,26 @@ int main() {
 */
     struct card * a;
     a->color = 'r';
-    a->number = 3;
+    a->number = 9;
     a->next = NULL;
-
+    printCards(a);
     struct card * b;
     b->color = 'y';
-    b->number = 9;
+    b->number = 0;
     a->next = b;
+    b->next = NULL;
     printCards(a);
+    struct card * c;
+    c->color = 'g';
+    c->number = 5;
+    b->next = c;
+    c->next = NULL;
+    printCards(a);
+    /*struct hand * player1card1;
+    player1card1->cards = a;
+    player1card1->cards = b;
+
+    printCards(player1card1);*/
     //a->next = b;
     //printCards(a);
     //printf("creating 7 random cards\n");
@@ -200,7 +234,7 @@ int main() {
     //printf("drawing a card\n");
     //drawCard();
 
-    return 0;
+    //return 0;
 
 
 }
