@@ -92,7 +92,6 @@ void printCard(struct card * _card){
   printf("your card is: %s\n", cardData);
 }
 
-
 void randomCard(int n){
   srand(time(NULL));
   char cardColor[4] = {'r', 'y', 'g', 'b'};
@@ -112,6 +111,22 @@ void randomCard(int n){
 
 void drawCard(){
   randomCard(1);
+}
+
+char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
+    debug("server attempting to write to client\n");
+    write(client_socket, isturn_y, strlen(isturn_y));
+    debug("server successfully wrote to client\n");
+    //read the whole thing
+    debug("server attempting to read from client\n");
+    read(client_socket, buff, sizeof(buff) - 1);
+    //trim
+    buff[strlen(buff) - 1] = '\0';
+    if  (buff[strlen(buff) - 1] == 13) {
+        buff[strlen(buff) - 1] = '\0';
+    }
+    printf("Received from client %d: '%s'\n", i + 1, buff);
+    return buff;
 }
 
 int main() {
@@ -209,8 +224,8 @@ int main() {
             printf("All 3 clients have connected.\n");
 
             // temporary variable to store the card on top of the deck
-            //char* toppadeck = calloc(100,sizeof(char));
-            //toppadeck = "soy first card";
+            char* toppadeck = calloc(100,sizeof(char));
+            //char* toppadeck = "soy first card";
 
             // enter the main loop of the game - put this into a separate function
             while(1) {
@@ -224,23 +239,10 @@ int main() {
                     char* isturn_y = "y";
                     char* isturn_n = "n";
                     char buff[1025] = "";
+                    printf("Card on deck: %s\n",toppadeck);
                     for (int j = 0; j < MAX_CLIENTS; j++) {
-                        //printf("Card on deck: %s\n",toppadeck);
-                        // if isturn
                         if (j == i) {
-                            debug("server attempting to write to client\n");
-                            write(client_sockets[j], isturn_y, strlen(isturn_y));
-                            debug("server successfully wrote to client\n");
-                            //read the whole thing
-                            debug("server attempting to read from client\n");
-                            read(client_sockets[i], buff, sizeof(buff) - 1);
-                            //trim
-                            buff[strlen(buff) - 1] = '\0';
-                            if  (buff[strlen(buff) - 1] == 13) {
-                                buff[strlen(buff) - 1] = '\0';
-                            }
-                            //strcat(toppadeck,buff);
-                            printf("Received from client %d: '%s'\n", i + 1, buff);
+                            strcpy(toppadeck,clientTurn(client_sockets[j],isturn_y,buff,i));
                         } else {
                             write(client_sockets[j], isturn_n, strlen(isturn_n));
                         }
