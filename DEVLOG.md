@@ -28,3 +28,11 @@ Set up basic client
 Client is able to connect to server
 Server prints message when all three clients are connected and write to it
 ~ 1 hour
+
+### 2024-01-08 - Turns
+Server handles which client's turn it is
+Client has different behavior depending on if it's the client's turn or not
+Bug: sometimes client's turn functions normally, sometimes does not
+Removed sleep calls and clients seem to be working, more thorough testing will be conducted tomorrow
+Added infrastructure (debug print, sighandler, when server dies the clients die gracefully with it)
+~ 2 hours
