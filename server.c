@@ -46,6 +46,11 @@ struct card {
   printf("your card is: %s\n", cardData);
 }*/
 
+/*struct card * create(struct card * head, char _color, int num){
+  struct card *
+  return
+}*/
+
 void printCards(struct card * hand) {
   printf("printing cards\n");
   int count = 0;
@@ -205,18 +210,18 @@ int main() {
     free(hints);
     freeaddrinfo(results);
 */
-    struct card * a;
+    struct card * a = (struct card *) malloc(sizeof(struct card));
     a->color = 'r';
     a->number = 9;
     a->next = NULL;
     printCards(a);
-    struct card * b;
+    struct card * b = (struct card *) malloc(sizeof(struct card));
     b->color = 'y';
     b->number = 0;
     a->next = b;
     b->next = NULL;
     printCards(a);
-    struct card * c;
+    struct card * c = (struct card *) malloc(sizeof(struct card));
     c->color = 'g';
     c->number = 5;
     b->next = c;
