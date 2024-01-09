@@ -129,11 +129,9 @@ int main() {
     fd_set read_fds;
     int client_sockets[MAX_CLIENTS] = {0}; // Array to store client sockets
 
-    // temporary variable to store the card on top of the deck
-    //char* toppadeck = calloc(100,sizeof(char));
-    //toppadeck = "soy first card";
-
     while (1) {
+
+        debug("start of the while loop\n");
         
         FD_ZERO(&read_fds);
         FD_SET(STDIN_FILENO, &read_fds);
@@ -187,39 +185,48 @@ int main() {
         // code to test a basic turn
         if (client_sockets[2] != 0) {
             printf("All 3 clients have connected.\n");
-            for (int i = 0; i < MAX_CLIENTS; i++) {
-                /**
-                 plan: For every cycle of the loop, i is the client whose turn it is
-                 all clients read isturn from the server
-                 if isturn, that client writes its card to the server
-                 if !isturn, that client doesn't do anything
-                **/
-                char* isturn_y = "y";
-                char* isturn_n = "n";
-                char buff[1025] = "";
-                for (int j = 0; j < MAX_CLIENTS; j++) {
-                    //printf("Card on deck: %s\n",toppadeck);
-                    // if isturn
-                    if (j == i) {
-                        debug("server attempting to write to client\n");
-                        write(client_sockets[j], isturn_y, strlen(isturn_y));
-                        debug("server successfully wrote to client\n");
-                        //read the whole thing
-                        debug("server attempting to read from client\n");
-                        read(client_sockets[i], buff, sizeof(buff) - 1);
-                        //trim
-                        buff[strlen(buff) - 1] = '\0';
-                        if  (buff[strlen(buff) - 1] == 13) {
+
+            // temporary variable to store the card on top of the deck
+            //char* toppadeck = calloc(100,sizeof(char));
+            //toppadeck = "soy first card";
+
+            // enter the main loop of the game - put this into a separate function
+            while(1) {
+                for (int i = 0; i < MAX_CLIENTS; i++) {
+                    /**
+                     plan: For every cycle of the loop, i is the client whose turn it is
+                    all clients read isturn from the server
+                    if isturn, that client writes its card to the server
+                    if !isturn, that client doesn't do anything
+                    **/
+                    char* isturn_y = "y";
+                    char* isturn_n = "n";
+                    char buff[1025] = "";
+                    for (int j = 0; j < MAX_CLIENTS; j++) {
+                        //printf("Card on deck: %s\n",toppadeck);
+                        // if isturn
+                        if (j == i) {
+                            debug("server attempting to write to client\n");
+                            write(client_sockets[j], isturn_y, strlen(isturn_y));
+                            debug("server successfully wrote to client\n");
+                            //read the whole thing
+                            debug("server attempting to read from client\n");
+                            read(client_sockets[i], buff, sizeof(buff) - 1);
+                            //trim
                             buff[strlen(buff) - 1] = '\0';
+                            if  (buff[strlen(buff) - 1] == 13) {
+                                buff[strlen(buff) - 1] = '\0';
+                            }
+                            //strcat(toppadeck,buff);
+                            printf("Received from client %d: '%s'\n", i + 1, buff);
+                        } else {
+                            write(client_sockets[j], isturn_n, strlen(isturn_n));
                         }
-                        //strcpy(toppadeck,buff);
-                        printf("Received from client %d: '%s'\n", i + 1, buff);
-                    } else {
-                        write(client_sockets[j], isturn_n, strlen(isturn_n));
                     }
                 }
+                printf("Round over\n");
             }
-            printf("Round over\n");
+            
         }
     }
 

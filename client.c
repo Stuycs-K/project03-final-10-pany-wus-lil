@@ -7,7 +7,7 @@ void clientLogic(int server_socket) {
     char* data = calloc(100,sizeof(char));
     debug("client is trying to read\n");
     int read_result = read(server_socket,data,100);
-    printf("read result: %d\n", read_result);
+    //printf("read result: %d\n", read_result);
     
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {

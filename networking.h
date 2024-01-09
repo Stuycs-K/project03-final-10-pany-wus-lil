@@ -16,7 +16,7 @@
 #define BUFFER_SIZE 1024
 
 // turn DEBUG to 0 when not in use
-#define DEBUG 1
+#define DEBUG 0
 void debug(char * message);
 
 void err(int i, char*message);
