@@ -40,3 +40,4 @@ Added infrastructure (debug print, sighandler, when server dies the clients die 
 ### 2024-01-09 - Rounds
 Server rereads from clients after round ends, allowing for multiple rounds
 Deck established; last client's card is stored in the top of the deck in preparation for the next client to use
+More advanced debugging print function

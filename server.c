@@ -17,7 +17,7 @@
 TODO LIST
 -Encapsulate
 -fork server so it's not stuck handling all 3 clients in order
--move debug print to a more suitable file
+-move DEBUG print to a more suitable file
  
 TEMPORARY MEASURES
 
@@ -113,11 +113,13 @@ void drawCard(){
 }
 
 char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
-    debug("server attempting to write to client\n");
+    // writes card on deck to clients
+    //write(client_sockets[j], toppadeck, strlen(toppadeck));
+    DEBUG("server attempting to write to client\n");
     write(client_socket, isturn_y, strlen(isturn_y));
-    debug("server successfully wrote to client\n");
+    DEBUG("server successfully wrote to client\n");
     //read the whole thing
-    debug("server attempting to read from client\n");
+    DEBUG("server attempting to read from client\n");
     read(client_socket, buff, sizeof(buff) - 1);
     //trim
     buff[strlen(buff) - 1] = '\0';
@@ -167,7 +169,7 @@ int main() {
 
     while (1) {
 
-        debug("start of the while loop\n");
+        DEBUG("start of the while loop\n");
         
         FD_ZERO(&read_fds);
         FD_SET(STDIN_FILENO, &read_fds);
@@ -197,7 +199,7 @@ int main() {
                         break;
                     }
                 }
-                //printf("Client connected.\n"); uncomment when done debugging
+                //printf("Client connected.\n"); uncomment when done DEBUGging
                 printf("Client %d connected.\n",client_socket);
             }
         }

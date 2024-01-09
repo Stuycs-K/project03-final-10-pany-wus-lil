@@ -15,9 +15,9 @@
 #define NETWORKING_H
 #define BUFFER_SIZE 1024
 
-// turn DEBUG to 0 when not in use
-#define DEBUG 0
-void debug(char * message);
+// comment out the long one when not in use
+//#define DEBUG(msg,...)
+#define DEBUG(msg,...) printf("debug: " msg, ##__VA_ARGS__)
 
 void err(int i, char*message);
 int server_setup();

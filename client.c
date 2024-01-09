@@ -5,7 +5,7 @@ void clientLogic(int server_socket) {
   while (1) {
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
-    debug("client is trying to read\n");
+    DEBUG("client is trying to read\n");
     int read_result = read(server_socket,data,100);
     //printf("read result: %d\n", read_result);
     
@@ -24,6 +24,11 @@ void clientLogic(int server_socket) {
       // if not your turn
       printf("It is not your turn.\n");
     }
+
+    DEBUG("isturn split over\n");
+    // reads card on deck
+    //read(server_socket,data,100);
+    //printf("Card on deck: %s",data);
   }
     /**
     char* data = calloc(100,sizeof(char));
@@ -68,6 +73,6 @@ int main(int argc, char *argv[] ) {
   //printf("client connected.\n");
   clientLogic(server_socket);
 
-  debug("client closing due to natural causes\n");
+  DEBUG("client closing due to natural causes\n");
   close(server_socket);
 }
