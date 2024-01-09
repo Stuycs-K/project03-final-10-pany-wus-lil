@@ -36,3 +36,7 @@ Bug: sometimes client's turn functions normally, sometimes does not
 Removed sleep calls and clients seem to be working, more thorough testing will be conducted tomorrow
 Added infrastructure (debug print, sighandler, when server dies the clients die gracefully with it)
 ~ 2 hours
+
+### 2024-01-09 - Rounds
+Server rereads from clients after round ends, allowing for multiple rounds
+Deck established; last client's card is stored in the top of the deck in preparation for the next client to use

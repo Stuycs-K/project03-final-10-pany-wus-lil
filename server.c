@@ -15,7 +15,6 @@
 
 /**
 TODO LIST
--A function that kills the clients when the server receives the signal to die
 -Encapsulate
 -fork server so it's not stuck handling all 3 clients in order
 -move debug print to a more suitable file
