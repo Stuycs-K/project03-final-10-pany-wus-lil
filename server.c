@@ -17,20 +17,23 @@ struct card {
   struct card * next;
 };
 
-/*struct card * add(struct card * head, struct card * tail, char _color, int _number){
-  struct card * tmp;
+struct card * create(char _color, int num){
+  struct card * tmp = (struct card *) malloc(sizeof(struct card));
   tmp->color = _color;
-  tmp->number = _number;
-  tmp->next = head;
-  if (head == NULL) {
-      head = tmp;
-      tail = tmp;
-  } else {
-      tail->next = tmp;
-      tail = tmp;
-  }
+  tmp->number = num;
+  tmp->next = NULL;
   return tmp;
-}*/
+}
+
+void add(struct card * head, char _color, int num){
+  struct card * temp;
+  struct card * new = create(_color, num);
+  temp = head;
+  while(temp != NULL && temp->next != NULL){
+    temp = temp->next;
+  }
+  temp->next = new;
+}
 
 /*void printCard(struct card * _card){
   char info[3];
@@ -46,10 +49,7 @@ struct card {
   printf("your card is: %s\n", cardData);
 }*/
 
-/*struct card * create(struct card * head, char _color, int num){
-  struct card *
-  return
-}*/
+
 
 void printCards(struct card * hand) {
   printf("printing cards\n");
@@ -59,7 +59,7 @@ void printCards(struct card * hand) {
     count++;
     hand = hand->next;
   }
-  printf("total: %d cards\n", count);
+  printf("total: %d cards\n\n", count);
 
 }
 
@@ -210,23 +210,17 @@ int main() {
     free(hints);
     freeaddrinfo(results);
 */
-    struct card * a = (struct card *) malloc(sizeof(struct card));
-    a->color = 'r';
-    a->number = 9;
-    a->next = NULL;
-    printCards(a);
-    struct card * b = (struct card *) malloc(sizeof(struct card));
-    b->color = 'y';
-    b->number = 0;
+    struct card * head = create('r', 9);
+    add(head, 'y', 0);
+    printCards(head);
+    add(head, 'g', 5);
+    printCards(head);
+    /*struct card * b = create('y', 0);
     a->next = b;
-    b->next = NULL;
     printCards(a);
-    struct card * c = (struct card *) malloc(sizeof(struct card));
-    c->color = 'g';
-    c->number = 5;
+    struct card * c = create('g', 5);
     b->next = c;
-    c->next = NULL;
-    printCards(a);
+    printCards(a);*/
     /*struct hand * player1card1;
     player1card1->cards = a;
     player1card1->cards = b;
