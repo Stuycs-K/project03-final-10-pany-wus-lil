@@ -22,7 +22,7 @@ void clientLogic(int server_socket) {
       write(server_socket,data,strlen(data));
     } else {
       // if not your turn
-      printf("It is not your turn.\n");
+      printf("Waiting for other players.\n");
     }
   }
     /**

@@ -183,8 +183,7 @@ int main() {
                         break;
                     }
                 }
-                //printf("Client connected.\n"); uncomment when done debugging
-                printf("Client %d connected.\n",client_socket);
+                printf("Client %d connected.\n", client_socket);
             }
         }
 
