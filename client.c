@@ -2,31 +2,15 @@
 #include <ctype.h>
 
 void clientLogic(int server_socket) {
-  char* data = calloc(100,sizeof(char));
-  read(server_socket,data,100);
-  // if isturn
-  printf("received from server: %s\n", data);
-  if (strcmp(data,"y") == 0) {
-    printf("It is your turn.\n");
-  } else {
-    printf("It is not your turn.\n");
-  }
-  /**
+    char* data = calloc(100,sizeof(char));
+    /**
     printf("Enter card you want to play: ");
     fgets(data,100,stdin);
     printf("\n");
     write(server_socket,data,strlen(data));**/
-    /**
-    char* data = calloc(100,sizeof(char));
-    fgets(data,100,stdin);
-    printf("Client attemping to write to server\n");
-    write(server_socket,data,strlen(data));
-    printf("Client wrote to server\n");
-    printf("Client attempting to read server\n");
     read(server_socket,data,8);
-    data[strlen(data)-1] = ' ';
-    printf("Client read: %s\n",data);
-    **/
+    // c'est un trimmer
+    // data[strlen(data)-1] = ' ';
 }
 
 int clienthandshake(char* server_address) {

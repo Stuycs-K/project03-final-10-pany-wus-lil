@@ -14,16 +14,51 @@
 struct card {
   char color;
   int number;
+  struct card * next;
 };
 
-struct card * create(char _color, int _number){
+/*struct card * add(struct card * head, struct card * tail, char _color, int _number){
   struct card * tmp;
   tmp->color = _color;
   tmp->number = _number;
+  tmp->next = head;
+  if (head == NULL) {
+      head = tmp;
+      tail = tmp;
+  } else {
+      tail->next = tmp;
+      tail = tmp;
+  }
   return tmp;
+}*/
+
+/*void printCard(struct card * _card){
+  char info[3];
+  char cardColor = _card->color;
+  info[0] = cardColor;
+  //printf("info[0]: %c\n", info[0]);
+  info[1] = _card->number + '0';
+  //printf("info[1]: %c\n", info[1]);
+  info[2] = '\0';
+  //printf("info[2]: %c\n", info[2]);
+  char * cardData = info;
+  //printf("info: %s\n", info);
+  printf("your card is: %s\n", cardData);
+}*/
+
+void printCards(struct card * hand) {
+  printf("printing cards\n");
+  int count = 0;
+  while (hand != NULL) {
+    printf("%c%d\n", hand->color, hand->number);
+    count++;
+    hand = hand->next;
+  }
+  printf("total: %d cards\n", count);
+
 }
 
-void printCard(struct card * _card){
+/*void printCard(struct card * _card){
   char info[3];
   char cardColor = _card->color;
   info[0] = cardColor;
@@ -57,10 +92,10 @@ void randomCard(int n){
 
 void drawCard(){
   randomCard(1);
-}
+}*/
 
 int main() {
-    struct addrinfo *hints, *results;
+    /*struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
     char* PORT = "9998";
     hints->ai_family = AF_INET;
@@ -147,25 +182,7 @@ int main() {
         if (client_sockets[2] != 0) {
             printf("All 3 clients have connected.\n");
             for (int i = 0; i < MAX_CLIENTS; i++) {
-                /**
-                 plan: For every cycle of the loop, i is the client whose turn it is
-                 all clients read isturn from the server
-                 if isturn, that client writes its card to the server
-                 if !isturn, that client doesn't do anything
-                **/
-                char* isturn_y = "y";
-                char* isturn_n = "n";
                 char buff[1025] = "";
-                for (int j = 0; j < MAX_CLIENTS; j++) {
-                    // if isturn
-                    if (j == i) {
-                        write(client_sockets[j], isturn_y, strlen(isturn_y));
-                    } else {
-                        write(client_sockets[j], isturn_n, strlen(isturn_n));
-                    }
-                }
-
-/**
                 //read the whole thing
                 read(client_sockets[i], buff, sizeof(buff) - 1);
                 //trim
@@ -173,7 +190,7 @@ int main() {
                 if (buff[strlen(buff) - 1] == 13) {
                     buff[strlen(buff) - 1] = '\0';
                 }
-                printf("Player %d played: '%s'\n", i + 1, buff);**/
+                printf("Received from client %d: '%s'\n", i + 1, buff);
             }
         }
     }
@@ -187,15 +204,37 @@ int main() {
 
     free(hints);
     freeaddrinfo(results);
+*/
+    struct card * a;
+    a->color = 'r';
+    a->number = 9;
+    a->next = NULL;
+    printCards(a);
+    struct card * b;
+    b->color = 'y';
+    b->number = 0;
+    a->next = b;
+    b->next = NULL;
+    printCards(a);
+    struct card * c;
+    c->color = 'g';
+    c->number = 5;
+    b->next = c;
+    c->next = NULL;
+    printCards(a);
+    /*struct hand * player1card1;
+    player1card1->cards = a;
+    player1card1->cards = b;
 
-    struct card * a = create('v', 3);
-    printCard(a);
-    printf("creating 7 random cards\n");
-    randomCard(7);
-    printf("drawing a card\n");
-    drawCard();
-    
-    return 0;
+    printCards(player1card1);*/
+    //a->next = b;
+    //printCards(a);
+    //printf("creating 7 random cards\n");
+    //randomCard(7);
+    //printf("drawing a card\n");
+    //drawCard();
+
+    //return 0;
 
 
 }
