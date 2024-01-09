@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
-
+#include <signal.h>
 #include "networking.h"
 
 #define MAX_CLIENTS 3
@@ -18,11 +18,19 @@ TODO LIST
 -A function that kills the clients when the server receives the signal to die
 -Encapsulate
 -fork server so it's not stuck handling all 3 clients in order
+-move debug print to a more suitable file
  
 TEMPORARY MEASURES
 -sleep(1) in client.c to prevent client from spamming
 -sleep(1) in server.c to ensure client writes before server attempts to read
 **/
+
+static void sighandler (int signo) {
+    if (signo == SIGINT) {
+        //printf("we are in the sighandler\n");
+        exit(0);
+    }
+}
 
 struct card {
   char color;
@@ -86,6 +94,8 @@ void drawCard(){
 }
 
 int main() {
+    signal(SIGINT,sighandler);  
+
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
     char* PORT = "9998";
@@ -196,7 +206,6 @@ int main() {
                         write(client_sockets[j], isturn_y, strlen(isturn_y));
                         debug("server successfully wrote to client\n");
                         //read the whole thing
-                        sleep(1); // prevents server from reading from nothing
                         debug("server attempting to read from client\n");
                         read(client_sockets[i], buff, sizeof(buff) - 1);
                         //trim
