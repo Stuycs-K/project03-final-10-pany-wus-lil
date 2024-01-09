@@ -3,10 +3,17 @@
 
 void clientLogic(int server_socket) {
   while (1) {
-    sleep(1); // prevents spam
+    //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
     debug("client is trying to read\n");
-    read(server_socket,data,100);
+    int read_result = read(server_socket,data,100);
+    printf("read result: %d\n", read_result);
+    
+    // if read is unsuccessful (server is dead), kill
+    if (read_result != 1) {
+      break;
+    }
+
     // if isturn
     //printf("received from server: %s\n", data);
     if (strcmp(data,"y") == 0) {
@@ -61,5 +68,6 @@ int main(int argc, char *argv[] ) {
   //printf("client connected.\n");
   clientLogic(server_socket);
 
+  debug("client closing due to natural causes\n");
   close(server_socket);
 }

@@ -21,8 +21,7 @@ TODO LIST
 -move debug print to a more suitable file
  
 TEMPORARY MEASURES
--sleep(1) in client.c to prevent client from spamming
--sleep(1) in server.c to ensure client writes before server attempts to read
+
 **/
 
 static void sighandler (int signo) {
