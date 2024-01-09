@@ -15,8 +15,13 @@
 #define NETWORKING_H
 #define BUFFER_SIZE 1024
 
+// turn DEBUG to 0 when not in use
+#define DEBUG 0
+void debug(char * message);
+
 void err(int i, char*message);
 int server_setup();
 int client_tcp_handshake(char*server_address);
 int server_tcp_handshake(int listen_socket);
+
 #endif

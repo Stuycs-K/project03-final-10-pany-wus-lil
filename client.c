@@ -2,15 +2,39 @@
 #include <ctype.h>
 
 void clientLogic(int server_socket) {
+  while (1) {
+    //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
+    debug("client is trying to read\n");
+    int read_result = read(server_socket,data,100);
+    //printf("read result: %d\n", read_result);
+    
+    // if read is unsuccessful (server is dead), kill
+    if (read_result != 1) {
+      break;
+    }
+
+    // if isturn
+    //printf("received from server: %s\n", data);
+    if (strcmp(data,"y") == 0) {
+      printf("Enter card you want to play: ");
+      fgets(data,100,stdin);
+      write(server_socket,data,strlen(data));
+    } else {
+      // if not your turn
+      printf("It is not your turn.\n");
+    }
+  }
     /**
-    printf("Enter card you want to play: ");
+    char* data = calloc(100,sizeof(char));
     fgets(data,100,stdin);
-    printf("\n");
-    write(server_socket,data,strlen(data));**/
+    printf("Client attemping to write to server\n");
+    write(server_socket,data,strlen(data));
+    printf("Client wrote to server\n");
+    printf("Client attempting to read server\n");
     read(server_socket,data,8);
     // c'est un trimmer
-    // data[strlen(data)-1] = ' ';
+    // data[strlen(data)-1] = ' ';**/
 }
 
 int clienthandshake(char* server_address) {
@@ -44,5 +68,6 @@ int main(int argc, char *argv[] ) {
   //printf("client connected.\n");
   clientLogic(server_socket);
 
+  debug("client closing due to natural causes\n");
   close(server_socket);
 }
