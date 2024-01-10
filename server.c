@@ -75,19 +75,25 @@ struct card * makeHand(int n){
   return head;
 }
 
-/*struct card * remove(struct card * head, char _color, int num){
-  if (head == NULL){
-    return NULL;
+void removeCard(struct card ** head, char _color, int num){
+  struct card * temp;
+  struct card * current = * head;
+  if (current && current->color == _color && current->number == num) { // removing first node
+    temp = current;
+    current = current->next;
+    free(temp);
+    * head = current;
+  } else {
+    while (current){
+      if (current->next != NULL && current->next->color == _color && current->next->number == num){
+        temp = current->next;
+        current->next = temp->next;
+        free(temp);
+      }
+      current = current->next;
+    }
   }
-  if (head->color == _color && head->number == num) {
-    struct card * temp;
-    temp = head->next;
-    free(head);
-    return temp;
-  }
-  head->next = remove(head->next, _color, num);
-  return head;
-}*/
+}
 
 /*void printCard(struct card * _card){
   char info[3];
@@ -285,14 +291,27 @@ int main() {
     freeaddrinfo(results);*/
 
     struct card * head = create('r', 9);
+    printf("adding a card r9\n");
+    printf("adding a card y0\n");
     add(head, 'y', 0);
     printCards(head);
+    printf("adding a card g5\n");
     add(head, 'g', 5);
     printCards(head);
+    printf("removing a card y0\n");
+    removeCard(&head, 'y', 0);
+    printCards(head);
+    printf("removing a card r9\n");
+    removeCard(&head, 'r', 9);
+    printCards(head);
+    printf("removing a card g5\n");
+    removeCard(&head, 'g', 5);
+    printCards(head);
+
+
+    printf("\nnew list\n\n");
     struct card * hand = makeHand(7);
     printCards(hand);
-    //remove(head, 'y', 0);
-    //printCards(head);
     printf("adding a card g5\n");
     add(hand, 'g', 5);
     printCards(hand);
