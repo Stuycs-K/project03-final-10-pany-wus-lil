@@ -15,8 +15,13 @@
 #define NETWORKING_H
 #define BUFFER_SIZE 1024
 
+// comment out the long one when not in use
+#define DEBUG(msg,...)
+//#define DEBUG(msg,...) printf("debug: " msg, ##__VA_ARGS__)
+
 void err(int i, char*message);
 int server_setup();
 int client_tcp_handshake(char*server_address);
 int server_tcp_handshake(int listen_socket);
+
 #endif

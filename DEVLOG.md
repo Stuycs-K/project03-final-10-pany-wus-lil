@@ -6,10 +6,7 @@
 Finished the description of the project and how we adjusted the uno game rules to implement our project
 
 ### 2024-01-04 - Server Setup
-Set up the server that allows multiple clients to connect, the for loop add the client if it's trying to connect, and wait until all the clients are connected.
-
-### 2024-01-05 - Signals
-Use signals to handle client quitting using ctrl c or quitting by disconnecting - when byte = 0, fd is removed
+Set up server that allow multiple clients to connect, the for loop add the client if it's trying to connect and wait until the all the clients are connected.
 
 ## Lisa Li
 
@@ -24,3 +21,34 @@ After switching to a singly linked list, I coded methods to add a card to the en
 
 ### 2024-01-09 - Random cards
 I've create a method to produce a list of n number of random cards using srand(time). I've started to work on a method to remove a certain card from the list, but I can't seem to figure out the why the function is segementation faulting. ~ 1 hour
+
+### 2024-01-03 - Brief description
+Expanded description including how much time was spent on task.
+
+## Sherlyn Wu
+
+### 2024-01-03 - Proposal
+Worked on what Uno features would be implemented and how
+
+### 2024-01-04 - Client setup
+Set up basic client
+
+### 2024-01-05 - Client-Server behavior
+Client is able to connect to server
+Server prints message when all three clients are connected and write to it
+~ 1 hour
+
+### 2024-01-08 - Turns
+Server handles which client's turn it is
+Client has different behavior depending on if it's the client's turn or not
+Bug: sometimes client's turn functions normally, sometimes does not
+Removed sleep calls and clients seem to be working, more thorough testing will be conducted tomorrow
+Added infrastructure (debug print, sighandler, when server dies the clients die gracefully with it)
+~ 2 hours
+
+### 2024-01-09 - Rounds
+Server rereads from clients after round ends, allowing for multiple rounds
+Deck established; last client's card is stored in the top of the deck in preparation for the next client to use
+More advanced debugging print function
+Attempted to debug: client sometimes reads card on deck and isturn in a single read, blocking the consecutive read
+~ 2 hours
