@@ -75,7 +75,7 @@ struct card * makeHand(int n){
   return head;
 }
 
-struct card * remove(struct card * head, char _color, int num){
+/*struct card * remove(struct card * head, char _color, int num){
   if (head == NULL){
     return NULL;
   }
@@ -87,7 +87,7 @@ struct card * remove(struct card * head, char _color, int num){
   }
   head->next = remove(head->next, _color, num);
   return head;
-}
+}*/
 
 /*void printCard(struct card * _card){
   char info[3];
@@ -114,42 +114,18 @@ void printCards(struct card * hand) {
     hand = hand->next;
   }
   printf("total: %d cards\n\n", count);
-
 }
 
-void printCard(struct card * _card){
-  char info[3];
-  char cardColor = _card->color;
-  info[0] = cardColor;
-  //printf("info[0]: %c\n", info[0]);
-  info[1] = _card->number + '0';
-  //printf("info[1]: %c\n", info[1]);
-  info[2] = '\0';
-  //printf("info[2]: %c\n", info[2]);
-  char * cardData = info;
-  //printf("info: %s\n", info);
-  printf("your card is: %s\n", cardData);
-}
-
-void randomCard(int n){
+struct card * draw(struct card * head){
   srand(time(NULL));
   char cardColor[4] = {'r', 'y', 'g', 'b'};
   int cardNumber[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   int cC, cN;
   rand();
-  while (n > 0){
-    cC = rand() % 4;
-    cN = rand() % 10;
-    //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
-    printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
-    //struct card * tmp = create(cardColor[cC], cardNumber[cN]);
-    //printCard(tmp);
-    n--;
-  }
-}
-
-void drawCard(){
-  randomCard(1);
+  cC = rand() % 4;
+  cN = rand() % 10;
+  add(head, cardColor[cC], cardNumber[cN]);
+  return head;
 }
 
 char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
@@ -169,7 +145,7 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
 }
 
 int main() {
-    signal(SIGINT,sighandler);
+    /*signal(SIGINT,sighandler);
 
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
@@ -275,7 +251,7 @@ int main() {
                     if isturn, that client writes its card to the server
                     if !isturn, that client doesn't do anything
                     **/
-                    char* isturn_y = "y";
+                    /*char* isturn_y = "y";
                     char* isturn_n = "n";
                     char buff[1025] = "";
                     //printf("Card on deck: %s\n",toppadeck);
@@ -306,8 +282,8 @@ int main() {
     }
 
     free(hints);
-    freeaddrinfo(results);
-/*
+    freeaddrinfo(results);*/
+
     struct card * head = create('r', 9);
     add(head, 'y', 0);
     printCards(head);
@@ -315,9 +291,17 @@ int main() {
     printCards(head);
     struct card * hand = makeHand(7);
     printCards(hand);
-    remove(head, 'y', 0);
-    printCards(head); */
+    //remove(head, 'y', 0);
+    //printCards(head);
+    printf("adding a card g5\n");
+    add(hand, 'g', 5);
+    printCards(hand);
+    printf("drawing a card\n");
+    draw(hand);
+    printCards(hand);
     /*struct card * b = create('y', 0);
+
+
 
 
     struct card * a;
