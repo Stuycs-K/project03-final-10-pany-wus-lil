@@ -3,11 +3,19 @@
 
 void clientLogic(int server_socket) {
   while (1) {
+
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
+
+    // reads card on deck
+    //DEBUG("client attempting to read card on deck\n");
+    //read(server_socket,data,100);
+    //printf("Card on deck: %s\n",data);
+
+    // receives isturn
     DEBUG("client is trying to read\n");
     int read_result = read(server_socket,data,100);
-    //printf("read result: %d\n", read_result);
+    ("read result: %d\n", read_result);
     
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
@@ -25,10 +33,7 @@ void clientLogic(int server_socket) {
       printf("It is not your turn.\n");
     }
 
-    DEBUG("isturn split over\n");
-    // reads card on deck
-    //read(server_socket,data,100);
-    //printf("Card on deck: %s",data);
+    //DEBUG("isturn split over\n");
   }
     /**
     char* data = calloc(100,sizeof(char));

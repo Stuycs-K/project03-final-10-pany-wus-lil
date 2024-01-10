@@ -41,3 +41,5 @@ Added infrastructure (debug print, sighandler, when server dies the clients die 
 Server rereads from clients after round ends, allowing for multiple rounds
 Deck established; last client's card is stored in the top of the deck in preparation for the next client to use
 More advanced debugging print function
+Attempted to debug: client sometimes reads card on deck and isturn in a single read, blocking the consecutive read
+~ 2 hours

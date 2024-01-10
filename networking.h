@@ -16,8 +16,8 @@
 #define BUFFER_SIZE 1024
 
 // comment out the long one when not in use
-//#define DEBUG(msg,...)
-#define DEBUG(msg,...) printf("debug: " msg, ##__VA_ARGS__)
+#define DEBUG(msg,...)
+//#define DEBUG(msg,...) printf("debug: " msg, ##__VA_ARGS__)
 
 void err(int i, char*message);
 int server_setup();
