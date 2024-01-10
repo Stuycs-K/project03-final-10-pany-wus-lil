@@ -35,6 +35,27 @@ void add(struct card * head, char _color, int num){
   temp->next = new;
 }
 
+struct card * makeHand(int n){
+  srand(time(NULL));
+  struct card * head = (struct card *) malloc(sizeof(struct card));
+  struct card * tmp;
+  char cardColor[4] = {'r', 'y', 'g', 'b'};
+  int cardNumber[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  int cC, cN;
+  rand();
+  while (n > 1){
+    cC = rand() % 4;
+    cN = rand() % 10;
+    //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
+    //printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
+    add(tmp, cardColor[cC], cardNumber[cN]);
+    //printCard(tmp);
+    n--;
+  }
+  head = tmp;
+  return head;
+}
+
 /*void printCard(struct card * _card){
   char info[3];
   char cardColor = _card->color;
@@ -215,6 +236,8 @@ int main() {
     printCards(head);
     add(head, 'g', 5);
     printCards(head);
+    struct card * hand = makeHand(7);
+    printCards(hand);
     /*struct card * b = create('y', 0);
     a->next = b;
     printCards(a);
