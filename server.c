@@ -56,6 +56,20 @@ struct card * makeHand(int n){
   return head;
 }
 
+struct card * remove(struct card * head, char _color, int num){
+  if (head == NULL){
+    return NULL;
+  }
+  if (head->color == _color && head->number == num) {
+    struct card * temp;
+    temp = head->next;
+    free(head);
+    return temp;
+  }
+  head->next = remove(head->next, _color, num);
+  return head;
+}
+
 /*void printCard(struct card * _card){
   char info[3];
   char cardColor = _card->color;
@@ -238,6 +252,8 @@ int main() {
     printCards(head);
     struct card * hand = makeHand(7);
     printCards(hand);
+    remove(head, 'y', 0);
+    printCards(head);
     /*struct card * b = create('y', 0);
     a->next = b;
     printCards(a);
