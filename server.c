@@ -75,6 +75,7 @@ struct card * makeHand(int n){
   return head;
 }
 
+/**
 struct card * remove(struct card * head, char _color, int num){
   if (head == NULL){
     return NULL;
@@ -87,7 +88,7 @@ struct card * remove(struct card * head, char _color, int num){
   }
   head->next = remove(head->next, _color, num);
   return head;
-}
+}**/
 
 /*void printCard(struct card * _card){
   char info[3];
@@ -164,6 +165,7 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
     if  (buff[strlen(buff) - 1] == 13) {
         buff[strlen(buff) - 1] = '\0';
     }
+    printf("%s\n",buff);
     printf("Received from client %d: '%s'\n", i + 1, buff);
     return buff;
 }
@@ -254,6 +256,10 @@ int main() {
                     buff[strlen(buff) - 1] = '\0';
                 }
                 printf("Received from client %d: '%s'\n", i + 1, buff);
+                if (buff == NULL) {
+                    printf("Closing server due to disconnected client\n");
+                    exit(-1);
+                }
                 //handle clinet message later here
             }
         }
@@ -263,8 +269,8 @@ int main() {
             printf("All 3 clients have connected.\n");
 
             // temporary variable to store the card on top of the deck
-            //char* toppadeck = calloc(100,sizeof(char));
-            //toppadeck = "soy first card";
+            char* toppadeck = calloc(100,sizeof(char));
+            toppadeck = "soy first card";
 
             // enter the main loop of the game - put this into a separate function
             while(1) {
@@ -278,14 +284,18 @@ int main() {
                     char* isturn_y = "y";
                     char* isturn_n = "n";
                     char buff[1025] = "";
-                    //printf("Card on deck: %s\n",toppadeck);
+                    printf("Card on deck: %s\n",toppadeck);
                     for (int j = 0; j < MAX_CLIENTS; j++) {
                         // writes card on deck to clients
                         //write(client_sockets[j], toppadeck, strlen(toppadeck));
                         if (j == i) {
-                            //strcpy(toppadeck,clientTurn(client_sockets[j],isturn_y,buff,i));
-                            clientTurn(client_sockets[j],isturn_y,buff,i);
+                            char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
+                            DEBUG("clientTurn result: %s\n",temp);
+                            toppadeck = calloc(strlen(temp),sizeof(char));
+                            strcpy(toppadeck,temp);
+                            //clientTurn(client_sockets[j],isturn_y,buff,i);
                         } else {
+                            DEBUG("Server writing isturn_n to client %d\n",j);
                             write(client_sockets[j], isturn_n, strlen(isturn_n));
                         }
                     }

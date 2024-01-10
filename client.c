@@ -15,7 +15,7 @@ void clientLogic(int server_socket) {
     // receives isturn
     DEBUG("client is trying to read\n");
     int read_result = read(server_socket,data,100);
-    ("read result: %d\n", read_result);
+    DEBUG("read result: %d\n", read_result);
     
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
@@ -27,6 +27,7 @@ void clientLogic(int server_socket) {
     if (strcmp(data,"y") == 0) {
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
+      //DEBUG("not the problem\n");
       write(server_socket,data,strlen(data));
     } else {
       // if not your turn
