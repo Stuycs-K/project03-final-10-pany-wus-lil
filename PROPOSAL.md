@@ -81,7 +81,7 @@ Server Setup (# of players, 7 cards each, set order of turns)
 Client (play a card, draw a card, end turn)
 (sub)Server (read from client, write what was played, next player)
 
-Yuchen - server setup, signals/premature client quitting
+Yuchen - server setup, signals/premature client quitting, sockets, discarded pile
 
 Sherlyn - client/turn implementation, card drawing, game end
 
