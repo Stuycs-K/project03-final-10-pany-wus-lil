@@ -8,6 +8,13 @@ Finished the description of the project and how we adjusted the uno game rules t
 ### 2024-01-04 - Server Setup
 Set up server that allow multiple clients to connect, the for loop add the client if it's trying to connect and wait until the all the clients are connected.
 
+### 2024-01-05 - Signal
+Added sighandler to control client quitting, exits the loop when client use ctrl c or when client disconnects, file descriptor is removed
+
+### 2024-01-08 - Signal
+
+
+
 ## Lisa Li
 
 ### 2024-01-04 - Create cards
