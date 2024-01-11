@@ -12,8 +12,9 @@ void clientLogic(int server_socket) {
     // replace sizeof(char)*2 with size of struct card
     int cod_result = read(server_socket,data,sizeof(char)*2);
     DEBUG("cod read result: %d\n", cod_result);
-    //char* toppadeck = calloc(100,sizeof(char));
-    printf("Card on deck: %s\n",data);
+    // client only needs to know what toppadeck is if it's the client's turn
+    char* toppadeck = calloc(100,sizeof(char));
+    strcpy(toppadeck,data);
     // COD code ends here
 
     // receives isturn
@@ -30,6 +31,7 @@ void clientLogic(int server_socket) {
     // if isturn
     //printf("received from server: %s\n", data);
     if (data[0] == 'y') {
+      printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
       //DEBUG("not the problem\n");

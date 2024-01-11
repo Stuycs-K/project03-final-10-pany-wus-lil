@@ -173,6 +173,9 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
 int main() {
     signal(SIGINT,sighandler);
 
+    printf("(remove when cards are being written/read from client instead of strings)\n");
+    printf("ONLY send strings with a length of 2 or the client has a stroke!!!!!!!!!\n");
+
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
     char* PORT = "9998";
@@ -286,12 +289,12 @@ int main() {
                     char buff[1025] = "";
                     printf("Card on deck: %s\n",toppadeck);
                     for (int j = 0; j < MAX_CLIENTS; j++) {
+                        // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+                        DEBUG("server trying to write cod\n");
+                        write(client_sockets[j], toppadeck, strlen(toppadeck));
+                        DEBUG("server wrote cod\n");
+                        // COD code ends here
                         if (j == i) {
-                            // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
-                            DEBUG("server trying to write cod\n");
-                            write(client_sockets[j], toppadeck, strlen(toppadeck));
-                            DEBUG("server wrote cod\n");
-                            // COD code ends here
                             char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
                             DEBUG("clientTurn result: %s\n",temp);
                             toppadeck = calloc(strlen(temp),sizeof(char));
