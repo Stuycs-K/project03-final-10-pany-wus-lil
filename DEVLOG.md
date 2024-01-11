@@ -23,7 +23,7 @@ After switching to a singly linked list, I coded methods to add a card to the en
 I've create a method to produce a list of n number of random cards using srand(time). I've started to work on a method to remove a certain card from the list, but I can't seem to figure out the why the function is segementation faulting. ~ 1 hour
 
 ### 2024-01-08 - Remove card
-I wrote a method to remove a card from the list, works for first, middle, and last nodes. I also created a draw card method that will add a random card to the end of the list. 
+I wrote a method to remove a card from the list, works for first, middle, and last nodes. I also created a draw card method that will add a random card to the end of the list. Made search method to enhance the remove method (whether or not you can play the card) ~ 1.1 hours
 
 ### 2024-01-03 - Brief description
 Expanded description including how much time was spent on task.

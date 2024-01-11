@@ -66,7 +66,7 @@ bool search(struct card * head, char _color, int num){
   return false;
 }
 
-void removeCard(struct card ** head, char _color, int num){
+bool removeCard(struct card ** head, char _color, int num){
   struct card * temp;
   struct card * current = * head;
   if (search(* head, _color, num)){
@@ -75,6 +75,7 @@ void removeCard(struct card ** head, char _color, int num){
       current = current->next;
       free(temp);
       * head = current;
+      return true;
     } else {
       while (current){
         if (current->next != NULL && current->next->color == _color && current->next->number == num){
@@ -84,8 +85,9 @@ void removeCard(struct card ** head, char _color, int num){
         }
         current = current->next;
       }
+      return true;
     }
-  } else printf("card not found\n");
+  } else return false;
 }
 
 struct card * makeHand(int n){
@@ -306,7 +308,7 @@ int main() {
     freeaddrinfo(results);*/
 
 
-    struct card * head = create('r', 9);
+    /*struct card * head = create('r', 9);
     printf("adding a card r9\n");
     printf("adding a card y0\n");
     add(head, 'y', 0);
@@ -314,6 +316,7 @@ int main() {
     printf("adding a card g5\n");
     add(head, 'g', 5);
     printCards(head);
+
     printf("searching for r3\n");
     if (search(head, 'r', 3)){
       printf("r3 found\n");
@@ -322,11 +325,16 @@ int main() {
     if (search(head, 'r', 9)){
       printf("r9 found\n");
     } else printf("r9 not found\n");
+
     printf("removing a card g0\n");
-    removeCard(&head, 'g', 0);
+    if (removeCard(&head, 'g', 0)){
+      printf("g0 removed\n");
+    } else printf("g0 not removed\n");
     printCards(head);
     printf("removing a card y0\n");
-    removeCard(&head, 'y', 0);
+    if (removeCard(&head, 'y', 0)){
+      printf("y0 removed\n");
+    } else printf("y0 not removed\n");
     printCards(head);
     printf("removing a card r9\n");
     removeCard(&head, 'r', 9);
@@ -344,29 +352,7 @@ int main() {
     printCards(hand);
     printf("drawing a card\n");
     draw(hand);
-    printCards(hand);
-
-    /*struct card * b = create('y', 0);
-
-
-
-
-    struct card * a;
-    a->color = 'r';
-    a->number = 3;
-    a->next = NULL;
-
-    struct card * b;
-    b->color = 'y';
-    b->number = 9;
-    a->next = b;
-    printCards(a);**/
-    //a->next = b;
-    //printCards(a);
-    //printf("creating 7 random cards\n");
-    //randomCard(7);
-    //printf("drawing a card\n");
-    //drawCard();
+    printCards(hand);*/
 
     return 0;
 
