@@ -52,3 +52,7 @@ Deck established; last client's card is stored in the top of the deck in prepara
 More advanced debugging print function
 Attempted to debug: client sometimes reads card on deck and isturn in a single read, blocking the consecutive read
 ~ 2 hours
+
+### 2024-01-10 - Top of deck
+Card at top of deck was causing segfaults, does not segfault now
+~ 40 mins

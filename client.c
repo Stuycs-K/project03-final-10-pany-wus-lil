@@ -7,15 +7,20 @@ void clientLogic(int server_socket) {
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
 
-    // reads card on deck
-    //DEBUG("client attempting to read card on deck\n");
-    //read(server_socket,data,100);
-    //printf("Card on deck: %s\n",data);
+    // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+    DEBUG("client attempting to read card on deck\n");
+    // replace sizeof(char)*2 with size of struct card
+    int cod_result = read(server_socket,data,sizeof(char)*2);
+    DEBUG("cod read result: %d\n", cod_result);
+    //char* toppadeck = calloc(100,sizeof(char));
+    printf("Card on deck: %s\n",data);
+    // COD code ends here
 
     // receives isturn
     DEBUG("client is trying to read\n");
-    int read_result = read(server_socket,data,100);
+    int read_result = read(server_socket,data,sizeof(char));
     DEBUG("read result: %d\n", read_result);
+    DEBUG("data read: %s\n",data);
     
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
@@ -24,7 +29,7 @@ void clientLogic(int server_socket) {
 
     // if isturn
     //printf("received from server: %s\n", data);
-    if (strcmp(data,"y") == 0) {
+    if (data[0] == 'y') {
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
       //DEBUG("not the problem\n");

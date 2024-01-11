@@ -270,7 +270,7 @@ int main() {
 
             // temporary variable to store the card on top of the deck
             char* toppadeck = calloc(100,sizeof(char));
-            toppadeck = "soy first card";
+            toppadeck = "00";
 
             // enter the main loop of the game - put this into a separate function
             while(1) {
@@ -286,9 +286,12 @@ int main() {
                     char buff[1025] = "";
                     printf("Card on deck: %s\n",toppadeck);
                     for (int j = 0; j < MAX_CLIENTS; j++) {
-                        // writes card on deck to clients
-                        //write(client_sockets[j], toppadeck, strlen(toppadeck));
                         if (j == i) {
+                            // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+                            DEBUG("server trying to write cod\n");
+                            write(client_sockets[j], toppadeck, strlen(toppadeck));
+                            DEBUG("server wrote cod\n");
+                            // COD code ends here
                             char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
                             DEBUG("clientTurn result: %s\n",temp);
                             toppadeck = calloc(strlen(temp),sizeof(char));
