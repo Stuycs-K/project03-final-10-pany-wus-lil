@@ -58,7 +58,7 @@ Semaphores will be used to only allow a certain number of clients (requested by 
 
 The server will fork/create subservers that will individually communicate with each client regarding the cards on hand and what the client chooses to play.
 
-Signals will be used to allow clients to prematurely quit the game. Unsure if the entire game should end when a client quits or if the server will reconfigure the turns and continue the game.
+Signals will be used to allow clients to prematurely quit the game. Game will end when one of the client quits or disconnects.
 
 Sockets will allow for clients to communicate to the (sub)server what card they would like play, if they want to draw a card, and if they want to end their turn. 
 
