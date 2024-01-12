@@ -60,3 +60,4 @@ Card at top of deck was causing segfaults, does not segfault now
 ### 2024-01-11 - Top of deck (cont)
 Card at top of deck is being sent between client and server
 Design flaw: spaghetti'd the client's toppadeck code; it reads toppadeck and isturn in a single read function rather than being split across two read functions, breaking everything, so I made the first read only 2 bytes and the second read only 1 byte. Fix in the future.
+~ 40 mins

@@ -36,9 +36,14 @@ void clientLogic(int server_socket) {
       fgets(data,100,stdin);
       //DEBUG("not the problem\n");
       write(server_socket,data,strlen(data));
-    } else {
+    } else if (data[0] == 'n') {
       // if not your turn
       printf("It is not your turn.\n");
+    } else {
+      printf("\e[1mYou have served your purpose. All that awaits you now is the gift of death. The darkness beyond your final days.\e[m");
+      printf("\nClient closing due to user misinput\nTold you not to put in strings over a length of 2 smh\n");
+      printf("Either that or I messed up the code somewhere. In that case, my bad.\n");
+      exit(-1);
     }
 
     //DEBUG("isturn split over\n");
