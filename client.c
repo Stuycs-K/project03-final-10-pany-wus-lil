@@ -1,6 +1,11 @@
 #include "networking.h"
 #include <ctype.h>
 
+void clientIsKil() {
+  printf("\e[1mYou have served your purpose. All that awaits you now is the gift of death. The darkness beyond your final days.\e[m");
+  exit(-1);
+}
+
 void clientLogic(int server_socket) {
   // ****** CARDS APPEAR AS SOON AS THE CLIENT CONNECTS *********
   // reads card on deck
@@ -41,6 +46,7 @@ void clientLogic(int server_socket) {
     // if isturn
     //printf("received from server: %s\n", data);
     if (data[0] == 'y') {
+      printf("It is now your turn.\n");
       printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
@@ -54,16 +60,18 @@ void clientLogic(int server_socket) {
         playable = removeCard(&hand, data[0], data[1] - '0');
       }
       printf("Cards in hand:\n");
-      printCards(hand);
+      int numberOfCards = printCards(hand);
       write(server_socket,data,strlen(data));
+      if (numberOfCards == 1) {
+        printf("\e[1mUNO!\e[m\n");
+      } else if (numberOfCards == 0) {
+        printf("\e[1mGAME OVER!\e[m\n");
+      }
     } else if (data[0] == 'n') {
       // if not your turn
-      printf("It is not your turn.\n");
+      DEBUG("Not the client's turn\n");
     } else {
-      printf("\e[1mYou have served your purpose. All that awaits you now is the gift of death. The darkness beyond your final days.\e[m");
-      printf("\nClient closing due to user misinput\nTold you not to put in strings over a length of 2 smh\n");
-      printf("Either that or I messed up the code somewhere. In that case, my bad.\n");
-      exit(-1);
+      clientIsKil();
     }
 
     //DEBUG("isturn split over\n");

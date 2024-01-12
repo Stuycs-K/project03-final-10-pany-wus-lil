@@ -51,9 +51,6 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
 int main() {
     signal(SIGINT,sighandler);
 
-    printf("(remove when cards are being written/read from client instead of strings)\n");
-    printf("ONLY send strings with a length of 2 or the client has a stroke!!!!!!!!!\n");
-
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
     char* PORT = "9998";

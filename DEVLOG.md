@@ -72,3 +72,7 @@ Card at top of deck was causing segfaults, does not segfault now
 Card at top of deck is being sent between client and server
 Design flaw: spaghetti'd the client's toppadeck code; it reads toppadeck and isturn in a single read function rather than being split across two read functions, breaking everything, so I made the first read only 2 bytes and the second read only 1 byte. Fix in the future.
 ~ 40 mins
+
+### 2024-01-12 - Integrating struct card and server/client
+Print statements to clarify gameplay and moved around code added during server/client-card integration
+Started UNO! and GAME OVER! handling
