@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <stdbool.h>
 #include "networking.h"
 
 #define MAX_CLIENTS 3
@@ -28,129 +29,6 @@ static void sighandler (int signo) {
         //printf("we are in the sighandler\n");
         exit(0);
     }
-}
-
-struct card {
-  char color;
-  int number;
-  struct card *next;
-};
-
-struct card * create(char _color, int num){
-  struct card * tmp = (struct card *) malloc(sizeof(struct card));
-  tmp->color = _color;
-  tmp->number = num;
-  tmp->next = NULL;
-  return tmp;
-}
-
-void add(struct card * head, char _color, int num){
-  struct card * temp;
-  struct card * new = create(_color, num);
-  temp = head;
-  while(temp != NULL && temp->next != NULL){
-    temp = temp->next;
-  }
-  temp->next = new;
-}
-
-struct card * makeHand(int n){
-  srand(time(NULL));
-  struct card * head = (struct card *) malloc(sizeof(struct card));
-  struct card * tmp;
-  char cardColor[4] = {'r', 'y', 'g', 'b'};
-  int cardNumber[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  int cC, cN;
-  rand();
-  while (n > 1){
-    cC = rand() % 4;
-    cN = rand() % 10;
-    //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
-    //printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
-    add(tmp, cardColor[cC], cardNumber[cN]);
-    //printCard(tmp);
-    n--;
-  }
-  head = tmp;
-  return head;
-}
-
-/**
-struct card * remove(struct card * head, char _color, int num){
-  if (head == NULL){
-    return NULL;
-  }
-  if (head->color == _color && head->number == num) {
-    struct card * temp;
-    temp = head->next;
-    free(head);
-    return temp;
-  }
-  head->next = remove(head->next, _color, num);
-  return head;
-}**/
-
-/*void printCard(struct card * _card){
-  char info[3];
-  char cardColor = _card->color;
-  info[0] = cardColor;
-  //printf("info[0]: %c\n", info[0]);
-  info[1] = _card->number + '0';
-  //printf("info[1]: %c\n", info[1]);
-  info[2] = '\0';
-  //printf("info[2]: %c\n", info[2]);
-  char * cardData = info;
-  //printf("info: %s\n", info);
-  printf("your card is: %s\n", cardData);
-}*/
-
-
-
-void printCards(struct card * hand) {
-  printf("printing cards\n");
-  int count = 0;
-  while (hand != NULL) {
-    printf("%c%d\n", hand->color, hand->number);
-    count++;
-    hand = hand->next;
-  }
-  printf("total: %d cards\n\n", count);
-
-}
-
-void printCard(struct card * _card){
-  char info[3];
-  char cardColor = _card->color;
-  info[0] = cardColor;
-  //printf("info[0]: %c\n", info[0]);
-  info[1] = _card->number + '0';
-  //printf("info[1]: %c\n", info[1]);
-  info[2] = '\0';
-  //printf("info[2]: %c\n", info[2]);
-  char * cardData = info;
-  //printf("info: %s\n", info);
-  printf("your card is: %s\n", cardData);
-}
-
-void randomCard(int n){
-  srand(time(NULL));
-  char cardColor[4] = {'r', 'y', 'g', 'b'};
-  int cardNumber[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  int cC, cN;
-  rand();
-  while (n > 0){
-    cC = rand() % 4;
-    cN = rand() % 10;
-    //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
-    printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
-    //struct card * tmp = create(cardColor[cC], cardNumber[cN]);
-    //printCard(tmp);
-    n--;
-  }
-}
-
-void drawCard(){
-  randomCard(1);
 }
 
 char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
@@ -276,6 +154,18 @@ int main() {
             toppadeck = "00";
 
             // enter the main loop of the game - put this into a separate function
+            /*for (int i = 0; i < MAX_CLIENTS; i++){
+              char count[256];
+              sprintf(count, "Your 7 cards are: \n%d", 7);
+              write(client_sockets[i], count, sizeof(count), 0);
+            }
+
+            char * clientCards = calloc(100,sizeof(char));
+            for (int i = 0; i < MAX_CLIENTS; i++){
+              struct card * cards = makeHand(7);
+              fgets(data,100,printCards(cards));
+              write(client_sockets[i], cards, sizeof(cards));
+            }*/
             while(1) {
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     /**
@@ -323,35 +213,53 @@ int main() {
 
     free(hints);
     freeaddrinfo(results);
-/*
-    struct card * head = create('r', 9);
+
+
+    /*struct card * head = create('r', 9);
+    printf("adding a card r9\n");
+    printf("adding a card y0\n");
     add(head, 'y', 0);
     printCards(head);
+    printf("adding a card g5\n");
     add(head, 'g', 5);
     printCards(head);
+
+    printf("searching for r3\n");
+    if (search(head, 'r', 3)){
+      printf("r3 found\n");
+    } else printf("r3 not found\n");
+    printf("searching for r9\n");
+    if (search(head, 'r', 9)){
+      printf("r9 found\n");
+    } else printf("r9 not found\n");
+
+    printf("removing a card g0\n");
+    if (removeCard(&head, 'g', 0)){
+      printf("g0 removed\n");
+    } else printf("g0 not removed\n");
+    printCards(head);
+    printf("removing a card y0\n");
+    if (removeCard(&head, 'y', 0)){
+      printf("y0 removed\n");
+    } else printf("y0 not removed\n");
+    printCards(head);
+    printf("removing a card r9\n");
+    removeCard(&head, 'r', 9);
+    printCards(head);
+    printf("removing a card g5\n");
+    removeCard(&head, 'g', 5);
+    printCards(head);
+
+
+    printf("\nnew list\n\n");
     struct card * hand = makeHand(7);
     printCards(hand);
-    remove(head, 'y', 0);
-    printCards(head); */
-    /*struct card * b = create('y', 0);
-
-
-    struct card * a;
-    a->color = 'r';
-    a->number = 3;
-    a->next = NULL;
-
-    struct card * b;
-    b->color = 'y';
-    b->number = 9;
-    a->next = b;
-    printCards(a);**/
-    //a->next = b;
-    //printCards(a);
-    //printf("creating 7 random cards\n");
-    //randomCard(7);
-    //printf("drawing a card\n");
-    //drawCard();
+    printf("adding a card g5\n");
+    add(hand, 'g', 5);
+    printCards(hand);
+    printf("drawing a card\n");
+    draw(hand);
+    printCards(hand);*/
 
     return 0;
 

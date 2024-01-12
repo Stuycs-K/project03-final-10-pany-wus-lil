@@ -2,6 +2,15 @@
 #include <ctype.h>
 
 void clientLogic(int server_socket) {
+  // ****** CARDS APPEAR AS SOON AS THE CLIENT CONNECTS *********
+  // reads card on deck
+  /*DEBUG("client attempting to read card on deck\n");
+  read(server_socket,data,100);
+  printf("Card on deck: %s\n",data);*/
+  struct card * hand = makeHand(7);
+  printf("Cards on deck:\n");
+  printCards(hand);
+
   while (1) {
 
     //sleep(1); // prevents spam
@@ -34,7 +43,16 @@ void clientLogic(int server_socket) {
       printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
-      //DEBUG("not the problem\n");
+      //printf("color: %c\n", data[0]);
+      //printf("number: %d\n", data[1] - '0');
+      bool playable = removeCard(&hand, data[0], data[1] - '0');;
+      while (!playable){
+        printf("Cannot play card.\n");
+        printf("Enter card you want to play: ");
+        fgets(data,100,stdin);
+        playable = removeCard(&hand, data[0], data[1] - '0');
+      }
+      printCards(hand);
       write(server_socket,data,strlen(data));
     } else if (data[0] == 'n') {
       // if not your turn
@@ -71,7 +89,7 @@ int clienthandshake(char* server_address) {
   int serverd;//store the socket descriptor here
   //create the socket
   serverd = socket(results->ai_family, results->ai_socktype, results->ai_protocol);
-  
+
   //connect to the server
   connect(serverd,results->ai_addr,results->ai_addrlen);
 
@@ -85,7 +103,7 @@ int main(int argc, char *argv[] ) {
   if(argc>1){
     ID=argv[1];
   }
-  
+
   int server_socket = clienthandshake(ID);
 
   //printf("client connected.\n");
