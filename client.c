@@ -2,15 +2,19 @@
 #include <ctype.h>
 
 void clientLogic(int server_socket) {
+  // ****** CARDS APPEAR AS SOON AS THE CLIENT CONNECTS *********
+  // reads card on deck
+  /*DEBUG("client attempting to read card on deck\n");
+  read(server_socket,data,100);
+  printf("Card on deck: %s\n",data);*/
+  struct card * hand = makeHand(7);
+  printf("Cards on deck:\n");
+  printCards(hand);
+
   while (1) {
 
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
-
-    // reads card on deck
-    DEBUG("client attempting to read card on deck\n");
-    read(server_socket,data,100);
-    printf("Card on deck: %s\n",data);
 
     // receives isturn
     DEBUG("client is trying to read\n");
@@ -27,10 +31,20 @@ void clientLogic(int server_socket) {
     if (strcmp(data,"y") == 0) {
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
+      //printf("color: %c\n", data[0]);
+      //printf("number: %d\n", data[1] - '0');
+      bool playable = removeCard(&hand, data[0], data[1] - '0');;
+      while (!playable){
+        printf("Cannot play card.\n");
+        printf("Enter card you want to play: ");
+        fgets(data,100,stdin);
+        playable = removeCard(&hand, data[0], data[1] - '0');
+      }
+      printCards(hand);
       write(server_socket,data,strlen(data));
     } else {
       // if not your turn
-      printf("It is not your turn.\n");
+      printf("It is not your turn.\n\n");
     }
 
     //DEBUG("isturn split over\n");

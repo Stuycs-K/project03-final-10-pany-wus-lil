@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <stdbool.h>
 
 #ifndef NETWORKING_H
 #define NETWORKING_H
@@ -30,5 +31,8 @@ int printCards(struct card * hand);
 struct card * draw(struct card * head);
 void add(struct card * head, char _color, int num);
 struct card * create(char _color, int num);
+bool search(struct card * head, char _color, int num);
+bool removeCard(struct card ** head, char _color, int num);
+struct card * makeHand(int n);
 
 #endif

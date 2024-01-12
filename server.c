@@ -31,76 +31,6 @@ static void sighandler (int signo) {
     }
 }
 
-bool search(struct card * head, char _color, int num){
-  struct card * current = head;
-  while (current){
-    if (current->color == _color && current->number == num){
-      return true;
-    }
-    current = current->next;
-  }
-  return false;
-}
-
-bool removeCard(struct card ** head, char _color, int num){
-  struct card * temp;
-  struct card * current = * head;
-  if (search(* head, _color, num)){
-    if (current && current->color == _color && current->number == num) { // removing first node
-      temp = current;
-      current = current->next;
-      free(temp);
-      * head = current;
-      return true;
-    } else {
-      while (current){
-        if (current->next != NULL && current->next->color == _color && current->next->number == num){
-          temp = current->next;
-          current->next = temp->next;
-          free(temp);
-        }
-        current = current->next;
-      }
-      return true;
-    }
-  } else return false;
-}
-
-struct card * makeHand(int n){
-  srand(time(NULL));
-  struct card * head = (struct card *) malloc(sizeof(struct card));
-  char cardColor[4] = {'r', 'y', 'g', 'b'};
-  int cardNumber[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  int cC, cN;
-  rand();
-  while (n > 0){
-    cC = rand() % 4;
-    cN = rand() % 10;
-    //printf("color: %c\nnumber: %d\n", cardColor[cC], cardNumber[cN]);
-    //printf("card: %c%d\n", cardColor[cC], cardNumber[cN]);
-    add(head, cardColor[cC], cardNumber[cN]);
-    //printCard(tmp);
-    n--;
-  }
-  removeCard(&head, 0, 0);
-  return head;
-}
-
-
-/*void printCard(struct card * _card){
-  char info[3];
-  char cardColor = _card->color;
-  info[0] = cardColor;
-  //printf("info[0]: %c\n", info[0]);
-  info[1] = _card->number + '0';
-  //printf("info[1]: %c\n", info[1]);
-  info[2] = '\0';
-  //printf("info[2]: %c\n", info[2]);
-  char * cardData = info;
-  //printf("info: %s\n", info);
-  printf("your card is: %s\n", cardData);
-}*/
-
 char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
     DEBUG("server attempting to write to client\n");
     write(client_socket, isturn_y, strlen(isturn_y));
@@ -216,18 +146,10 @@ int main() {
             //toppadeck = "soy first card";
 
             // enter the main loop of the game - put this into a separate function
-            for (int i = 0; i < MAX_CLIENTS; i++){
+            /*for (int i = 0; i < MAX_CLIENTS; i++){
               char count[256];
               sprintf(count, "Your 7 cards are: \n%d", 7);
               write(client_sockets[i], count, sizeof(count), 0);
-
-              // Then send that many node's worth of name-data
-              struct struct * n = headNode;
-              while(n)
-              {
-                send(sfd, n->name, sizeof(n->name), 0);
-                n = n->next;
-              }
             }
 
             char * clientCards = calloc(100,sizeof(char));
@@ -235,7 +157,7 @@ int main() {
               struct card * cards = makeHand(7);
               fgets(data,100,printCards(cards));
               write(client_sockets[i], cards, sizeof(cards));
-            }
+            }*/
             while(1) {
               for (int i = 0; i < MAX_CLIENTS; i++) {
                 /**
