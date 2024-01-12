@@ -8,10 +8,11 @@ void clientLogic(int server_socket) {
   read(server_socket,data,100);
   printf("Card on deck: %s\n",data);*/
 
+  struct card * hand = makeHand(7);
+  printf("Cards in hand:\n");
+  printCards(hand);
+
   while (1) {
-    struct card * hand = makeHand(7);
-    printf("Cards in hand:\n");
-    printCards(hand);
 
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
@@ -52,6 +53,7 @@ void clientLogic(int server_socket) {
         fgets(data,100,stdin);
         playable = removeCard(&hand, data[0], data[1] - '0');
       }
+      printf("Cards in hand:\n");
       printCards(hand);
       write(server_socket,data,strlen(data));
     } else if (data[0] == 'n') {
