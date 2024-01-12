@@ -30,6 +30,8 @@ Error when:
 
 play a card that is invalid or does not exist
 
+play multiple cards at the same time
+
 play a different card from the card the player drew
 
 
