@@ -8,15 +8,15 @@ void clientLogic(int server_socket) {
     char* data = calloc(100,sizeof(char));
 
     // reads card on deck
-    //DEBUG("client attempting to read card on deck\n");
-    //read(server_socket,data,100);
-    //printf("Card on deck: %s\n",data);
+    DEBUG("client attempting to read card on deck\n");
+    read(server_socket,data,100);
+    printf("Card on deck: %s\n",data);
 
     // receives isturn
     DEBUG("client is trying to read\n");
     int read_result = read(server_socket,data,100);
     ("read result: %d\n", read_result);
-    
+
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
       break;
@@ -58,7 +58,7 @@ int clienthandshake(char* server_address) {
   int serverd;//store the socket descriptor here
   //create the socket
   serverd = socket(results->ai_family, results->ai_socktype, results->ai_protocol);
-  
+
   //connect to the server
   connect(serverd,results->ai_addr,results->ai_addrlen);
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[] ) {
   if(argc>1){
     ID=argv[1];
   }
-  
+
   int server_socket = clienthandshake(ID);
 
   //printf("client connected.\n");

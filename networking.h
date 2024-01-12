@@ -19,9 +19,16 @@
 #define DEBUG(msg,...)
 //#define DEBUG(msg,...) printf("debug: " msg, ##__VA_ARGS__)
 
+struct card {
+  char color;
+  int number;
+  struct card *next;
+};
+
 void err(int i, char*message);
-int server_setup();
-int client_tcp_handshake(char*server_address);
-int server_tcp_handshake(int listen_socket);
+int printCards(struct card * hand);
+struct card * draw(struct card * head);
+void add(struct card * head, char _color, int num);
+struct card * create(char _color, int num);
 
 #endif

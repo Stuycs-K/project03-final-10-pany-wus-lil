@@ -31,30 +31,6 @@ static void sighandler (int signo) {
     }
 }
 
-struct card {
-  char color;
-  int number;
-  struct card *next;
-};
-
-struct card * create(char _color, int num){
-  struct card * tmp = (struct card *) malloc(sizeof(struct card));
-  tmp->color = _color;
-  tmp->number = num;
-  tmp->next = NULL;
-  return tmp;
-}
-
-void add(struct card * head, char _color, int num){
-  struct card * temp;
-  struct card * new = create(_color, num);
-  temp = head;
-  while(temp != NULL && temp->next != NULL){
-    temp = temp->next;
-  }
-  temp->next = new;
-}
-
 bool search(struct card * head, char _color, int num){
   struct card * current = head;
   while (current){
@@ -125,32 +101,6 @@ struct card * makeHand(int n){
   printf("your card is: %s\n", cardData);
 }*/
 
-
-
-int printCards(struct card * hand) {
-  printf("printing cards\n");
-  int count = 0;
-  while (hand != NULL) {
-    printf("%c%d\n", hand->color, hand->number);
-    count++;
-    hand = hand->next;
-  }
-  printf("total: %d cards\n\n", count);
-  return count;
-}
-
-struct card * draw(struct card * head){
-  srand(time(NULL));
-  char cardColor[4] = {'r', 'y', 'g', 'b'};
-  int cardNumber[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  int cC, cN;
-  rand();
-  cC = rand() % 4;
-  cN = rand() % 10;
-  add(head, cardColor[cC], cardNumber[cN]);
-  return head;
-}
-
 char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
     DEBUG("server attempting to write to client\n");
     write(client_socket, isturn_y, strlen(isturn_y));
@@ -168,7 +118,7 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
 }
 
 int main() {
-    /*signal(SIGINT,sighandler);
+    signal(SIGINT,sighandler);
 
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
@@ -266,17 +216,37 @@ int main() {
             //toppadeck = "soy first card";
 
             // enter the main loop of the game - put this into a separate function
+            for (int i = 0; i < MAX_CLIENTS; i++){
+              char count[256];
+              sprintf(count, "Your 7 cards are: \n%d", 7);
+              write(client_sockets[i], count, sizeof(count), 0);
+
+              // Then send that many node's worth of name-data
+              struct struct * n = headNode;
+              while(n)
+              {
+                send(sfd, n->name, sizeof(n->name), 0);
+                n = n->next;
+              }
+            }
+
+            char * clientCards = calloc(100,sizeof(char));
+            for (int i = 0; i < MAX_CLIENTS; i++){
+              struct card * cards = makeHand(7);
+              fgets(data,100,printCards(cards));
+              write(client_sockets[i], cards, sizeof(cards));
+            }
             while(1) {
-                for (int i = 0; i < MAX_CLIENTS; i++) {
-                    /**
-                     plan: For every cycle of the loop, i is the client whose turn it is
-                    all clients read isturn from the server
-                    if isturn, that client writes its card to the server
-                    if !isturn, that client doesn't do anything
-                    **/
-                    /*char* isturn_y = "y";
-                    char* isturn_n = "n";
-                    char buff[1025] = "";
+              for (int i = 0; i < MAX_CLIENTS; i++) {
+                /**
+                plan: For every cycle of the loop, i is the client whose turn it is
+                all clients read isturn from the server
+                if isturn, that client writes its card to the server
+                if !isturn, that client doesn't do anything
+                **/
+                char* isturn_y = "y";
+                char* isturn_n = "n";
+                char buff[1025] = "";
                     //printf("Card on deck: %s\n",toppadeck);
                     for (int j = 0; j < MAX_CLIENTS; j++) {
                         // writes card on deck to clients
@@ -305,7 +275,7 @@ int main() {
     }
 
     free(hints);
-    freeaddrinfo(results);*/
+    freeaddrinfo(results);
 
 
     /*struct card * head = create('r', 9);
