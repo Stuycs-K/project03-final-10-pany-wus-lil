@@ -7,11 +7,11 @@ void clientLogic(int server_socket) {
   /*DEBUG("client attempting to read card on deck\n");
   read(server_socket,data,100);
   printf("Card on deck: %s\n",data);*/
-  struct card * hand = makeHand(7);
-  printf("Cards on deck:\n");
-  printCards(hand);
 
   while (1) {
+    struct card * hand = makeHand(7);
+    printf("Cards in hand:\n");
+    printCards(hand);
 
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
