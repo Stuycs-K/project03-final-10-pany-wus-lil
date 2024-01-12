@@ -23,17 +23,18 @@ Able to create a specific card provided that the color and number is given or pr
 ### 2024-01-05 - Changing to Linked List
 Original method kept leading to bus error and segmentation faults, so I decided to integrate linked lists into the card struct. I added a next so that I link it to the next card. Might add a prev to do a doubly linked list. Created a print cards function printing the cards and the total. ~ 1 hour
 
-### 2024-01-08 - Create hand of cards
-After switching to a singly linked list, I coded methods to add a card to the end of a list, as well as print out the entire list, noting how many cards are in the list total. I've begun working on the beginning distribution of random cards as well as testing for any possible loopholes. ~ 1 hour
+### 2024-01-08 - Create hand of cards + random
+After switching to a singly linked list, I coded methods to add a card to the end of a list, as well as print out the entire list, noting how many cards are in the list total. I've begun working on the beginning distribution of random cards as well as testing for any possible loopholes. I've create a method to produce a list of n number of random cards using srand(time). ~ 1.1 hour
 
-### 2024-01-09 - Random cards
-I've create a method to produce a list of n number of random cards using srand(time). I've started to work on a method to remove a certain card from the list, but I can't seem to figure out the why the function is segementation faulting. ~ 1 hour
+### 2024-01-09 - Remove card + draw
+I wrote a method to remove a card from the list, works for first, middle, and last nodes. I also created a draw card method that will add a random card to the end of the list. Made search method to enhance the remove method (whether or not you can play the card). ~ 1.1 hours
 
-### 2024-01-08 - Remove card
-I wrote a method to remove a card from the list, works for first, middle, and last nodes. I also created a draw card method that will add a random card to the end of the list. Made search method to enhance the remove method (whether or not you can play the card) ~ 1.1 hours
+### 2024-01-10 - Completed card methods -> merging
+After extensive testing of all the card methods, I've started to merge these methods with the client and server. This includes putting the methods into a header file that both the client and the server will include. I wanted the server to make and send the initial 7 cards to the client, but after a long struggle, I was unable to send the list of cards through the socket to the client. ~ 1.2 hours
 
-### 2024-01-03 - Brief description
-Expanded description including how much time was spent on task.
+### 2024-01-11 - Distribute cards + remove
+Since I was unable to send the list of cards through the socket to the client, I decided to just let the client make 7 random cards (BUG: cards appear after joining immediately). In the same manner, I decided to let the client remove/play the card they want. If the client cannot play the card (because they don't have it), they are prompted over and over until they enter a card that they do have. ~ 1.5 hours
+
 
 ## Sherlyn Wu
 
