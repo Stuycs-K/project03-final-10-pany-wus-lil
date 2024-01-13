@@ -97,3 +97,13 @@ struct card * makeHand(int n){
   removeCard(&head, 0, 0);
   return head;
 }
+
+bool matches(char card1Color, int card1Num, char card2Color, int card2Num){
+  if (card1Color == card2Color){
+    return true;
+  }
+  if (card1Num == card2Num){
+    return true;
+  }
+  return false;
+}
