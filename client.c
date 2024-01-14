@@ -1,14 +1,20 @@
 #include "networking.h"
 #include <ctype.h>
 
+void clientIsKil() {
+  printf("\e[1mYou have served your purpose. All that awaits you now is the gift of death. The darkness beyond your final days.\e[m");
+  exit(-1);
+}
+
 void clientLogic(int server_socket) {
   // ****** CARDS APPEAR AS SOON AS THE CLIENT CONNECTS *********
   // reads card on deck
   /*DEBUG("client attempting to read card on deck\n");
   read(server_socket,data,100);
   printf("Card on deck: %s\n",data);*/
+
   struct card * hand = makeHand(7);
-  printf("Cards on deck:\n");
+  printf("Cards in hand:\n");
   printCards(hand);
 
   while (1) {
@@ -16,11 +22,22 @@ void clientLogic(int server_socket) {
     //sleep(1); // prevents spam
     char* data = calloc(100,sizeof(char));
 
+    // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+    DEBUG("client attempting to read card on deck\n");
+    // replace sizeof(char)*2 with size of struct card
+    int cod_result = read(server_socket,data,sizeof(char)*2);
+    DEBUG("cod read result: %d\n", cod_result);
+    // client only needs to know what toppadeck is if it's the client's turn
+    char* toppadeck = calloc(100,sizeof(char));
+    strcpy(toppadeck,data);
+    // COD code ends here
+
     // receives isturn
     DEBUG("client is trying to read\n");
-    int read_result = read(server_socket,data,100);
-    ("read result: %d\n", read_result);
-
+    int read_result = read(server_socket,data,sizeof(char));
+    DEBUG("read result: %d\n", read_result);
+    DEBUG("data read: %s\n",data);
+    
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
       break;
@@ -28,7 +45,9 @@ void clientLogic(int server_socket) {
 
     // if isturn
     //printf("received from server: %s\n", data);
-    if (strcmp(data,"y") == 0) {
+    if (data[0] == 'y') {
+      printf("It is now your turn.\n");
+      printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
       //printf("color: %c\n", data[0]);
@@ -40,11 +59,19 @@ void clientLogic(int server_socket) {
         fgets(data,100,stdin);
         playable = removeCard(&hand, data[0], data[1] - '0');
       }
-      printCards(hand);
+      printf("Cards in hand:\n");
+      int numberOfCards = printCards(hand);
       write(server_socket,data,strlen(data));
-    } else {
+      if (numberOfCards == 1) {
+        printf("\e[1mUNO!\e[m\n");
+      } else if (numberOfCards == 0) {
+        printf("\e[1mGAME OVER!\e[m\n");
+      }
+    } else if (data[0] == 'n') {
       // if not your turn
-      printf("It is not your turn.\n\n");
+      DEBUG("Not the client's turn\n");
+    } else {
+      clientIsKil();
     }
 
     //DEBUG("isturn split over\n");
