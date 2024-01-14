@@ -76,3 +76,6 @@ Design flaw: spaghetti'd the client's toppadeck code; it reads toppadeck and ist
 ### 2024-01-12 - Integrating struct card and server/client
 Print statements to clarify gameplay and moved around code added during server/client-card integration
 Started UNO! and GAME OVER! handling
+
+### 2024-01-14 - Restructuring server-client
+Adjusted makefile to ensure clean works even if one of the files are missing

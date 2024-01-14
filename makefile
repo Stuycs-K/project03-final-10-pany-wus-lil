@@ -14,7 +14,4 @@ server: servera
 networking.o: networking.c networking.h
 	@gcc -c networking.c
 clean:
-	@rm *.o
-	@rm server
-	@rm client
-	@rm *~
+	@rm *.o server client *~
