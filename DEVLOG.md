@@ -79,3 +79,4 @@ Started UNO! and GAME OVER! handling
 
 ### 2024-01-14 - Restructuring server-client
 Adjusted makefile to ensure clean works even if one of the files are missing
+Moved chunks of code into functions

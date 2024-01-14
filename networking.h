@@ -16,6 +16,8 @@
 #define NETWORKING_H
 #define BUFFER_SIZE 1024
 
+#define MAX_CLIENTS 3
+
 // comment out the long one when not in use
 #define DEBUG(msg,...)
 //#define DEBUG(msg,...) printf("debug: " msg, ##__VA_ARGS__)
@@ -34,5 +36,6 @@ struct card * create(char _color, int num);
 bool search(struct card * head, char _color, int num);
 bool removeCard(struct card ** head, char _color, int num);
 struct card * makeHand(int n);
+int server_setup();
 
 #endif

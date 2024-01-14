@@ -12,8 +12,6 @@
 #include <stdbool.h>
 #include "networking.h"
 
-#define MAX_CLIENTS 3
-
 /**
 TODO LIST
 -Encapsulate
@@ -50,33 +48,8 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
 
 int main() {
     signal(SIGINT,sighandler);
-
-    struct addrinfo *hints, *results;
-    hints = calloc(1, sizeof(struct addrinfo));
-    char* PORT = "9998";
-    hints->ai_family = AF_INET;
-    hints->ai_socktype = SOCK_STREAM; // TCP socket
-    hints->ai_flags = AI_PASSIVE; // only needed on server
-    getaddrinfo(NULL, PORT, hints, &results); // NULL is localhost or 127.0.0.1
-
-    //create socket
-    int listen_socket = socket(results->ai_family, results->ai_socktype, results->ai_protocol);
-
-    //free port after program exit
-    int yes = 1;
-    if (setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
-        printf("sockopt  error\n");
-        printf("%s\n", strerror(errno));
-        exit(-1);
-    }
-
-    int err = bind(listen_socket, results->ai_addr, results->ai_addrlen);
-    if(err == -1){
-        printf("Error binding: %s", strerror(errno));
-        exit(1);
-    }
-    listen(listen_socket, MAX_CLIENTS); // Maximum # of clients that can connect
-    printf("Listening on port %s\n", PORT);
+    
+    int listen_socket = server_setup();
 
     socklen_t sock_size;
     struct sockaddr_storage client_address;
@@ -207,10 +180,6 @@ int main() {
             close(client_sockets[i]);
         }
     }
-
-    free(hints);
-    freeaddrinfo(results);
-
 
     /*struct card * head = create('r', 9);
     printf("adding a card r9\n");
