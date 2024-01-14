@@ -105,5 +105,8 @@ bool matches(char card1Color, int card1Num, char card2Color, int card2Num){
   if (card1Num == card2Num){
     return true;
   }
+  if (card1Color == '0'){
+    return true;
+  }
   return false;
 }

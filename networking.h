@@ -34,5 +34,6 @@ struct card * create(char _color, int num);
 bool search(struct card * head, char _color, int num);
 bool removeCard(struct card ** head, char _color, int num);
 struct card * makeHand(int n);
+bool matches(char card1Color, int card1Num, char card2Color, int card2Num);
 
 #endif

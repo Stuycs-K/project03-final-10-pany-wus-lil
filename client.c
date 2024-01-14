@@ -37,7 +37,7 @@ void clientLogic(int server_socket) {
     int read_result = read(server_socket,data,sizeof(char));
     DEBUG("read result: %d\n", read_result);
     DEBUG("data read: %s\n",data);
-    
+
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
       break;
@@ -50,16 +50,23 @@ void clientLogic(int server_socket) {
       printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
-      //printf("color: %c\n", data[0]);
-      //printf("number: %d\n", data[1] - '0');
-      bool playable = removeCard(&hand, data[0], data[1] - '0');;
-      while (!playable){
-        printf("Cannot play card.\n");
+      //printf("color: %c\n", toppadeck[0]);
+      //printf("number: %d\n", toppadeck[1] - '0');
+      bool playable = removeCard(&hand, data[0], data[1] - '0');
+      bool canPlay = matches(toppadeck[0], toppadeck[1] - '0', data[0], data[1] - '0');
+      while (canPlay == false){
+        printf("Card doesn't match.\n\n");
+        printf("Enter card you want to play: ");
+        fgets(data,100,stdin);
+        canPlay = matches(toppadeck[0], toppadeck[1] - '0', data[0], data[1] - '0');
+      }
+      while (playable == false){
+        printf("You don't have this card.\n\n");
         printf("Enter card you want to play: ");
         fgets(data,100,stdin);
         playable = removeCard(&hand, data[0], data[1] - '0');
       }
-      printf("Cards in hand:\n");
+      printf("\nCards in hand:\n");
       int numberOfCards = printCards(hand);
       write(server_socket,data,strlen(data));
       if (numberOfCards == 1) {
