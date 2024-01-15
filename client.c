@@ -8,10 +8,6 @@ void clientIsKil() {
 
 void clientLogic(int server_socket) {
   // ****** CARDS APPEAR AS SOON AS THE CLIENT CONNECTS *********
-  // reads card on deck
-  /*DEBUG("client attempting to read card on deck\n");
-  read(server_socket,data,100);
-  printf("Card on deck: %s\n",data);*/
 
   struct card * hand = makeHand(7);
   printf("Cards in hand:\n");
@@ -78,19 +74,7 @@ void clientLogic(int server_socket) {
     } else {
       clientIsKil();
     }
-
-    //DEBUG("isturn split over\n");
   }
-    /**
-    char* data = calloc(100,sizeof(char));
-    fgets(data,100,stdin);
-    printf("Client attemping to write to server\n");
-    write(server_socket,data,strlen(data));
-    printf("Client wrote to server\n");
-    printf("Client attempting to read server\n");
-    read(server_socket,data,8);
-    // c'est un trimmer
-    // data[strlen(data)-1] = ' ';**/
 }
 
 int clienthandshake(char* server_address) {
@@ -123,54 +107,6 @@ int main(int argc, char *argv[] ) {
 
   //printf("client connected.\n");
   clientLogic(server_socket);
-
-  /*
-    fd_set master_fds, read_fds;
-
-    FD_ZERO(&master_fds);
-    FD_SET(STDIN_FILENO, &master_fds);
-    FD_SET(server_socket, &master_fds);  
-
-    int max_socket = server_socket + 1;
-
-    while (1) {
-
-      read_fds = master_fds;
-
-
-        int i = select(max_socket, &read_fds, NULL, NULL, NULL);
-        if (i == -1) {
-            perror("Error in select");
-            exit(-1);
-        }
-
-        if (FD_ISSET(server_socket, &read_fds)) {
-          printf("from server\n");
-          char* data = calloc(100,sizeof(char));
-
-          // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
-          DEBUG("client attempting to read card on deck\n");
-          // replace sizeof(char)*2 with size of struct card
-          int cod_result = read(server_socket,data,sizeof(char)*2);
-          if (cod_result <= 0) {
-            exit(-1); }
-          DEBUG("cod read result: %d\n", cod_result);
-          printf("Card on deck: %s\n",data);
-        }
-
-        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-          printf("from stdin\n");
-          char* data = calloc(100,sizeof(char));
-
-          // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
-          DEBUG("client attempting to read card on deck\n");
-          // replace sizeof(char)*2 with size of struct card
-          int cod_result = read(STDIN_FILENO,data,sizeof(char)*2);
-          DEBUG("cod read result: %d\n", cod_result);
-          printf("Card on deck: %s\n",data);
-        }
-    }
-  */
 
   DEBUG("client closing due to natural causes\n");
   close(server_socket);

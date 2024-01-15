@@ -12,16 +12,6 @@
 #include <stdbool.h>
 #include "networking.h"
 
-/**
-TODO LIST
--Encapsulate
--fork server so it's not stuck handling all 3 clients in order
--move DEBUG print to a more suitable file
-
-TEMPORARY MEASURES
-
-**/
-
 static void sighandler (int signo) {
     if (signo == SIGINT) {
         //printf("we are in the sighandler\n");
@@ -124,22 +114,10 @@ int main() {
             toppadeck = "00";
 
             // enter the main loop of the game - put this into a separate function
-            /*for (int i = 0; i < MAX_CLIENTS; i++){
-              char count[256];
-              sprintf(count, "Your 7 cards are: \n%d", 7);
-              write(client_sockets[i], count, sizeof(count), 0);
-            }
-
-            char * clientCards = calloc(100,sizeof(char));
-            for (int i = 0; i < MAX_CLIENTS; i++){
-              struct card * cards = makeHand(7);
-              fgets(data,100,printCards(cards));
-              write(client_sockets[i], cards, sizeof(cards));
-            }*/
             while(1) {
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     /**
-                     plan: For every cycle of the loop, i is the client whose turn it is
+                    For every cycle of the loop, i is the client whose turn it is
                     all clients read isturn from the server
                     if isturn, that client writes its card to the server
                     if !isturn, that client doesn't do anything
@@ -181,53 +159,6 @@ int main() {
         }
     }
 
-    /*struct card * head = create('r', 9);
-    printf("adding a card r9\n");
-    printf("adding a card y0\n");
-    add(head, 'y', 0);
-    printCards(head);
-    printf("adding a card g5\n");
-    add(head, 'g', 5);
-    printCards(head);
-
-    printf("searching for r3\n");
-    if (search(head, 'r', 3)){
-      printf("r3 found\n");
-    } else printf("r3 not found\n");
-    printf("searching for r9\n");
-    if (search(head, 'r', 9)){
-      printf("r9 found\n");
-    } else printf("r9 not found\n");
-
-    printf("removing a card g0\n");
-    if (removeCard(&head, 'g', 0)){
-      printf("g0 removed\n");
-    } else printf("g0 not removed\n");
-    printCards(head);
-    printf("removing a card y0\n");
-    if (removeCard(&head, 'y', 0)){
-      printf("y0 removed\n");
-    } else printf("y0 not removed\n");
-    printCards(head);
-    printf("removing a card r9\n");
-    removeCard(&head, 'r', 9);
-    printCards(head);
-    printf("removing a card g5\n");
-    removeCard(&head, 'g', 5);
-    printCards(head);
-
-
-    printf("\nnew list\n\n");
-    struct card * hand = makeHand(7);
-    printCards(hand);
-    printf("adding a card g5\n");
-    add(hand, 'g', 5);
-    printCards(hand);
-    printf("drawing a card\n");
-    draw(hand);
-    printCards(hand);*/
-
     return 0;
-
 
 }
