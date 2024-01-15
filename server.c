@@ -42,13 +42,13 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
         buff[strlen(buff) - 1] = '\0';
     }
     printf("%s\n",buff);
-    printf("Received from client %d: '%s'\n", i + 1, buff);
+    DEBUG("Received from client %d: '%s'\n", i + 1, buff);
     return buff;
 }
 
 int main() {
     signal(SIGINT,sighandler);
-    
+
     int listen_socket = server_setup();
 
     socklen_t sock_size;

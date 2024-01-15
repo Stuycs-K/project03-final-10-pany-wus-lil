@@ -16,10 +16,14 @@ void clientLogic(int server_socket) {
   struct card * hand = makeHand(7);
   printf("Cards in hand:\n");
   printCards(hand);
+  int notTurnCounter = 0;
 
   while (1) {
 
-    //sleep(1); // prevents spam
+    if (notTurnCounter == 0){
+      printf("It is not your turn. Please wait.\n");
+      notTurnCounter = 1;
+    }
     char* data = calloc(100,sizeof(char));
 
     // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
@@ -46,6 +50,7 @@ void clientLogic(int server_socket) {
     // if isturn
     //printf("received from server: %s\n", data);
     if (data[0] == 'y') {
+      notTurnCounter = 0;
       printf("It is now your turn.\n");
       printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
@@ -118,6 +123,54 @@ int main(int argc, char *argv[] ) {
 
   //printf("client connected.\n");
   clientLogic(server_socket);
+
+  /*
+    fd_set master_fds, read_fds;
+
+    FD_ZERO(&master_fds);
+    FD_SET(STDIN_FILENO, &master_fds);
+    FD_SET(server_socket, &master_fds);  
+
+    int max_socket = server_socket + 1;
+
+    while (1) {
+
+      read_fds = master_fds;
+
+
+        int i = select(max_socket, &read_fds, NULL, NULL, NULL);
+        if (i == -1) {
+            perror("Error in select");
+            exit(-1);
+        }
+
+        if (FD_ISSET(server_socket, &read_fds)) {
+          printf("from server\n");
+          char* data = calloc(100,sizeof(char));
+
+          // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+          DEBUG("client attempting to read card on deck\n");
+          // replace sizeof(char)*2 with size of struct card
+          int cod_result = read(server_socket,data,sizeof(char)*2);
+          if (cod_result <= 0) {
+            exit(-1); }
+          DEBUG("cod read result: %d\n", cod_result);
+          printf("Card on deck: %s\n",data);
+        }
+
+        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+          printf("from stdin\n");
+          char* data = calloc(100,sizeof(char));
+
+          // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+          DEBUG("client attempting to read card on deck\n");
+          // replace sizeof(char)*2 with size of struct card
+          int cod_result = read(STDIN_FILENO,data,sizeof(char)*2);
+          DEBUG("cod read result: %d\n", cod_result);
+          printf("Card on deck: %s\n",data);
+        }
+    }
+  */
 
   DEBUG("client closing due to natural causes\n");
   close(server_socket);
