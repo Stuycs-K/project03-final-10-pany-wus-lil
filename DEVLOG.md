@@ -11,7 +11,26 @@ Set up server that allow multiple clients to connect, the for loop add the clien
 ### 2024-01-05 - Signal
 Added sighandler to control client quitting, exits the loop when client use ctrl c or when client disconnects, file descriptor is removed
 
-### 2024-01-08 - Signal
+### 2024-01-05 - Signal
+Added sighandler to control client quitting, exits the loop when client use ctrl c or when client disconnects, file descriptor is removed
+
+### 2024-01-08 - Invalid Card
+checking if a played card is valid, and updating the game state accordingly
+
+### 2024-01-09 - Timer
+worked on timer, ensuring that players take their turns within a specified time frame
+
+### 2024-01-10 - Played Card History
+Implemented a feature to store and display the history of cards played during the game
+
+### 2024-01-11 - Handling Error
+when client has two cards that are the same, both of them are being played
+
+### 2024-01-12 - Handling Error
+fixing bugs associated with invalid cards
+
+### 2024-01-16 - End Game
+ending the game
 
 
 
