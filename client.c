@@ -46,14 +46,25 @@ void clientLogic(int server_socket) {
     // if isturn
     //printf("received from server: %s\n", data);
     if (data[0] == 'y') {
+      bool playable, canPlay;
       printf("It is now your turn.\n");
       printf("Card on deck: %s\n",toppadeck);
       printf("Enter card you want to play: ");
       fgets(data,100,stdin);
       //printf("color: %c\n", toppadeck[0]);
       //printf("number: %d\n", toppadeck[1] - '0');
-      bool playable = removeCard(&hand, data[0], data[1] - '0');
-      bool canPlay = matches(toppadeck[0], toppadeck[1] - '0', data[0], data[1] - '0');
+      if (data[0] == 'd'){
+        printf("drawing a card\n");
+        draw(hand);
+        printCards(hand);
+        printf("Enter card you want to play: ");
+        fgets(data,100,stdin);
+        playable = removeCard(&hand, data[0], data[1] - '0');
+        canPlay = matches(toppadeck[0], toppadeck[1] - '0', data[0], data[1] - '0');
+      } else {
+        playable = removeCard(&hand, data[0], data[1] - '0');
+        canPlay = matches(toppadeck[0], toppadeck[1] - '0', data[0], data[1] - '0');
+      }
       while (canPlay == false){
         printf("Card doesn't match.\n\n");
         printf("Enter card you want to play: ");

@@ -35,8 +35,8 @@ After extensive testing of all the card methods, I've started to merge these met
 ### 2024-01-11 - Distribute cards + remove
 Since I was unable to send the list of cards through the socket to the client, I decided to just let the client make 7 random cards (BUG: cards appear after joining immediately). In the same manner, I decided to let the client remove/play the card they want. If the client cannot play the card (because they don't have it), they are prompted over and over until they enter a card that they do have. ~ 1.5 hours
 
-### 2024-01-11 - Play card
-Wrote a method to determine where or not the card the client wants to play matches the previously played card. Still need to work on sending the previously played card to the next player.
+### 2024-01-12 - Matches previous card
+Wrote a method to determine where or not the card the client wants to play matches the previously played card. Doesn't allow client to play a card that doesn't match during the game. Allows client to draw one time only and then prompts client to play a card again.
 
 
 ## Sherlyn Wu
