@@ -33,7 +33,7 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
     if  (buff[strlen(buff) - 1] == 13) {
         buff[strlen(buff) - 1] = '\0';
     }**/
-    printf("%s\n",buff);
+    DEBUG("%s\n",buff);
     DEBUG("Received from client %d: '%s'\n", i + 1, buff);
     return buff;
 }
@@ -50,7 +50,10 @@ int main() {
     fd_set read_fds;
     int client_sockets[MAX_CLIENTS] = {0}; // Array to store client sockets
 
-    while (1) {
+    // when it becomes 0, game is over
+    int inProgress = 1;
+
+    while (inProgress == 1) {
 
         DEBUG("start of the while loop\n");
 
@@ -116,55 +119,65 @@ int main() {
             toppadeck = "00";
 
             // enter the main loop of the game - put this into a separate function
-            while(1) {
+            while(inProgress == 1) {
                 for (int i = 0; i < MAX_CLIENTS; i++) {
-                    /**
-                    For every cycle of the loop, i is the client whose turn it is
-                    all clients read isturn from the server
-                    if isturn, that client writes its card to the server
-                    if !isturn, that client doesn't do anything
-                    **/
-                    char* isturn_y = "y";
-                    char* isturn_n = "n";
-                    char buff[1025] = "";
-                    printf("Card on deck: %s\n",toppadeck);
-                    for (int j = 0; j < MAX_CLIENTS; j++) {
-                        // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
-                        DEBUG("server trying to write cod\n");
-                        write(client_sockets[j], toppadeck, strlen(toppadeck));
-                        DEBUG("server wrote cod\n");
-                        // COD code ends here
-                        if (j == i) {
-                            char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
-                            DEBUG("clientTurn result: %s\n",temp);
+                    if (inProgress == 1) {
+                        /**
+                        For every cycle of the loop, i is the client whose turn it is
+                        all clients read isturn from the server
+                        if isturn, that client writes its card to the server
+                        if !isturn, that client doesn't do anything
+                        **/
+                        char* isturn_y = "y";
+                        char* isturn_n = "n";
+                        char buff[1025] = "";
+                        printf("Card on deck: %s\n",toppadeck);
+                        for (int j = 0; j < MAX_CLIENTS; j++) {
+                            // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+                            DEBUG("server trying to write cod\n");
+                            write(client_sockets[j], toppadeck, strlen(toppadeck));
+                            DEBUG("server wrote cod\n");
+                            // COD code ends here
+                            if (j == i) {
+                                char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
+                                DEBUG("clientTurn result: %s\n",temp);
 
-                            // adds toppadeck
-                            toppadeck = calloc(strlen(temp),sizeof(char));
-                            char* moveToToppa = calloc(10,sizeof(char));
-                            moveToToppa = strtok(temp, ",");
-                            strcpy(toppadeck,moveToToppa);
-                            DEBUG("toppadeck shoudl just be a card: %s\n",toppadeck);
+                                // adds toppadeck
+                                toppadeck = calloc(strlen(temp),sizeof(char));
+                                char* moveToToppa = calloc(10,sizeof(char));
+                                moveToToppa = strtok(temp, ",");
+                                strcpy(toppadeck,moveToToppa);
+                                DEBUG("toppadeck shoudl just be a card: %s\n",toppadeck);
 
-                            // end of turn conditions: 
-                            // w for victory/game end, n for proceeding as normal
-                            //printf("\e[1mGAME OVER!\e[m\n");
-                            //char* data = calloc(10,sizeof(char));
-                            //strcpy(data,temp);
-                            //read(client_sockets[j],data,sizeof(char));
-                            //printf("received gameover from client? %s",data);
-                        } else {
-                            DEBUG("Server writing isturn_n to client %d\n",j);
-                            write(client_sockets[j], isturn_n, strlen(isturn_n));
+                                // end of turn conditions: 
+                                // w for victory/game end, n for proceeding as normal
+                                temp = strtok(NULL,",");
+                                DEBUG("temp: %s\n",temp);
+                                if (temp[0] == 'w') {
+                                    printf("\e[1mGAME OVER! Player %d wins!\e[m\n",j+1);
+                                    inProgress = 0;
+                                    break;
+                                } else if (temp[0] == 'n') {
+                                    DEBUG("NOT GAME OVER!\n");
+                                } else {
+                                    printf("Wow... that is not supposed to happen.\n");
+                                }
+                            } else {
+                                DEBUG("Server writing isturn_n to client %d\n",j);
+                                write(client_sockets[j], isturn_n, strlen(isturn_n));
+                            }
                         }
                     }
                 }
-                printf("Round over\n");
+                if (inProgress == 1) {
+                    printf("Round over\n");
+                }
             }
 
         }
     }
 
-    printf("server killed\n");
+    DEBUG("server killed\n");
 
     // Close client sockets
     for (int i = 0; i < MAX_CLIENTS; ++i) {

@@ -14,7 +14,9 @@ void clientLogic(int server_socket) {
   printCards(hand);
   int notTurnCounter = 0;
 
-  while (1) {
+  int inProgress = 1;
+
+  while (inProgress == 1) {
 
     if (notTurnCounter == 0){
       printf("It is not your turn. Please wait.\n");
@@ -72,6 +74,8 @@ void clientLogic(int server_socket) {
       if (numberOfCards == 0) {
         printf("\e[1mGAME OVER!\e[m\n");
         strcat(data,",w");
+        printf("You won :)\n");
+        inProgress = 0;
       } else {
         if (numberOfCards == 1) {
           printf("\e[1mUNO!\e[m\n");
