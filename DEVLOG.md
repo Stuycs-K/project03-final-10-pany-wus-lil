@@ -85,3 +85,4 @@ Moved chunks of code into functions
 
 ### 2024-01-14 - Restructuring server-client (cont)
 "It is not your turn" message sends before the client's turn
+~ 20 mins
