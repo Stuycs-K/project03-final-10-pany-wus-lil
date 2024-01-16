@@ -42,6 +42,7 @@ void clientLogic(int server_socket) {
     
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
+      printf("You lost... sucks to suck lol\n");
       break;
     }
 

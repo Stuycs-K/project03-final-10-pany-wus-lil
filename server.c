@@ -156,6 +156,7 @@ int main() {
                                 if (temp[0] == 'w') {
                                     printf("\e[1mGAME OVER! Player %d wins!\e[m\n",j+1);
                                     inProgress = 0;
+                                    // write winner to the other 2 clients
                                     break;
                                 } else if (temp[0] == 'n') {
                                     DEBUG("NOT GAME OVER!\n");

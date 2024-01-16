@@ -89,4 +89,4 @@ Moved chunks of code into functions
 
 ### 2024-01-16 - Game rules
 Ending the game
-~ 30 mins
+~ 1 hour
