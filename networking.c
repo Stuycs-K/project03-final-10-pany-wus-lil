@@ -70,6 +70,7 @@ bool removeCard(struct card ** head, char _color, int num){
           temp = current->next;
           current->next = temp->next;
           free(temp);
+          break;
         }
         current = current->next;
       }
