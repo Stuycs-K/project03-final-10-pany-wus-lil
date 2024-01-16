@@ -10,74 +10,70 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <stdbool.h>
-#include <semaphore.h>
 #include "networking.h"
 
 #define MAX_CLIENTS 3
 
-sem_t lastCardSemaphore;  // Semaphore for last card played
-sem_t historySemaphore;   // Semaphore for card played history
-
 /**
 TODO LIST
-- Encapsulate
-- Fork server so it's not stuck handling all 3 clients in order
-- Move DEBUG print to a more suitable file
+-Encapsulate
+-fork server so it's not stuck handling all 3 clients in order
+-move DEBUG print to a more suitable file
 
 TEMPORARY MEASURES
 
 **/
 
-// Signal handling function
-static void sighandler(int signo) {
+static void sighandler (int signo) {
     if (signo == SIGINT) {
-        sem_destroy(&lastCardSemaphore);
-        sem_destroy(&historySemaphore);
+        //printf("we are in the sighandler\n");
         exit(0);
     }
 }
 
-// Function to simulate client's turn
-char* clientTurn(int client_socket, char* isturn_y, char* buff, int i) {
+char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
     DEBUG("server attempting to write to client\n");
     write(client_socket, isturn_y, strlen(isturn_y));
     DEBUG("server successfully wrote to client\n");
-
-    // Simulate client's card play
-    // In a real scenario, read the actual card played from the client
-    char simulatedCard[1025] = "Simulated Card";
-    sem_wait(&lastCardSemaphore);
-    printf("Last Card Played: %s\n", simulatedCard);
-    sem_post(&lastCardSemaphore);
-
-    // Simulate history update
-    sem_wait(&historySemaphore);
-    printf("Updating Card History...\n");
-    // Update the card history here
-    sem_post(&historySemaphore);
-
+    //read the whole thing
+    DEBUG("server attempting to read from client\n");
+    read(client_socket, buff, sizeof(buff) - 1);
+    //trim
+    buff[strlen(buff) - 1] = '\0';
+    if  (buff[strlen(buff) - 1] == 13) {
+        buff[strlen(buff) - 1] = '\0';
+    }
+    printf("%s\n",buff);
+    printf("Received from client %d: '%s'\n", i + 1, buff);
     return buff;
 }
 
+int isValidCard(const char* played_card, const char* toppadeck) {
+    // Check if the color matches or the number is the same
+    if (played_card[0] == toppadeck[0] || played_card[1] == toppadeck[1]) {
+        return 1; // Valid card
+    } else {
+        return 0; // Invalid card
+    }
+}
+
 int main() {
-    signal(SIGINT, sighandler);
-
-    // Initialize semaphores
-    sem_init(&lastCardSemaphore, 0, 1);  // Initial value of 1 (mutex)
-    sem_init(&historySemaphore, 0, 1);   // Initial value of 1 (mutex)
-
+    signal(SIGINT,sighandler);
+    
+    char played_cards_history[MAX_CLIENTS][BUFFER_SIZE];
+    
     struct addrinfo *hints, *results;
     hints = calloc(1, sizeof(struct addrinfo));
     char* PORT = "9998";
     hints->ai_family = AF_INET;
-    hints->ai_socktype = SOCK_STREAM;  // TCP socket
-    hints->ai_flags = AI_PASSIVE;      // only needed on the server
-    getaddrinfo(NULL, PORT, hints, &results);  // NULL is localhost or 127.0.0.1
+    hints->ai_socktype = SOCK_STREAM; // TCP socket
+    hints->ai_flags = AI_PASSIVE; // only needed on server
+    getaddrinfo(NULL, PORT, hints, &results); // NULL is localhost or 127.0.0.1
 
-    // Create socket
+    //create socket
     int listen_socket = socket(results->ai_family, results->ai_socktype, results->ai_protocol);
 
-    // Free port after program exit
+    //free port after program exit
     int yes = 1;
     if (setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
         printf("sockopt  error\n");
@@ -86,11 +82,11 @@ int main() {
     }
 
     int err = bind(listen_socket, results->ai_addr, results->ai_addrlen);
-    if (err == -1) {
+    if(err == -1){
         printf("Error binding: %s", strerror(errno));
         exit(1);
     }
-    listen(listen_socket, MAX_CLIENTS);  // Maximum # of clients that can connect
+    listen(listen_socket, MAX_CLIENTS); // Maximum # of clients that can connect
     printf("Listening on port %s\n", PORT);
 
     socklen_t sock_size;
@@ -98,7 +94,7 @@ int main() {
     sock_size = sizeof(client_address);
 
     fd_set read_fds;
-    int client_sockets[MAX_CLIENTS] = {0};  // Array to store client sockets
+    int client_sockets[MAX_CLIENTS] = {0}; // Array to store client sockets
 
     while (1) {
 
@@ -111,6 +107,36 @@ int main() {
         for (int i = 0; i < MAX_CLIENTS; ++i) {
             if (client_sockets[i] > 0) {
                 FD_SET(client_sockets[i], &read_fds);
+            }
+            char* error_msg = NULL; // Variable to store error message, if any
+
+            // Check if the client wants to play a card
+            if (strncmp(buff, "play", 4) == 0) {
+                // Extract the card information from the client's message
+                char played_card[3];
+                strncpy(played_card, buff + 5, 2);
+                played_card[2] = '\0';
+
+                // Check if the played card is valid
+                if (!isValidCard(played_card, toppadeck)) {
+                    error_msg = "Error: Invalid card!";
+                } else {
+                    // Continue with existing code for handling the player's turn
+
+                    // Update the played_cards_history for the current player
+                    strcat(played_cards_history[i], toppadeck);
+                    strcat(played_cards_history[i], "\n");
+                }
+            }
+
+            if (strncmp(buff, "history", 7) == 0) {
+                // Send the played cards history to the client
+                write(client_sockets[i], played_cards_history[i], strlen(played_cards_history[i]));
+            }
+
+            // Send the error message to the client, if any
+            if (error_msg != NULL) {
+                write(client_sockets[i], error_msg, strlen(error_msg));
             }
         }
 
@@ -132,35 +158,56 @@ int main() {
                         break;
                     }
                 }
-                // printf("Client connected.\n"); uncomment when done DEBUGging
-                printf("Client %d connected.\n", client_socket);
+                //printf("Client connected.\n"); uncomment when done DEBUGging
+                printf("Client %d connected.\n",client_socket);
             }
         }
 
-        // Wait for 3 (max num) clients
+        //wait for 3 (max num) clients
         for (int i = 0; i < MAX_CLIENTS; ++i) {
             if (client_sockets[i] > 0 && FD_ISSET(client_sockets[i], &read_fds)) {
                 char buff[1025] = "";
-                // Read the whole thing
+                //read the whole thing
                 read(client_sockets[i], buff, sizeof(buff) - 1);
-                // Trim
+                //trim
                 buff[strlen(buff) - 1] = '\0';
                 if (buff[strlen(buff) - 1] == 13) {
                     buff[strlen(buff) - 1] = '\0';
                 }
                 printf("Received from client %d: '%s'\n", i + 1, buff);
-                // Handle client message later here
+                if (buff == NULL) {
+                    printf("Closing server due to disconnected client\n");
+                    exit(-1);
+                }
+                //handle clinet message later here
             }
         }
 
-        // Code to test a basic turn
+        // code to test a basic turn
         if (client_sockets[2] != 0) {
             printf("All 3 clients have connected.\n");
 
-            while (1) {
+            // temporary variable to store the card on top of the deck
+            char* toppadeck = calloc(100,sizeof(char));
+            toppadeck = "00";
+
+            // enter the main loop of the game - put this into a separate function
+            /*for (int i = 0; i < MAX_CLIENTS; i++){
+              char count[256];
+              sprintf(count, "Your 7 cards are: \n%d", 7);
+              write(client_sockets[i], count, sizeof(count), 0);
+            }
+
+            char * clientCards = calloc(100,sizeof(char));
+            for (int i = 0; i < MAX_CLIENTS; i++){
+              struct card * cards = makeHand(7);
+              fgets(data,100,printCards(cards));
+              write(client_sockets[i], cards, sizeof(cards));
+            }*/
+            while(1) {
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     /**
-                    plan: For every cycle of the loop, i is the client whose turn it is
+                     plan: For every cycle of the loop, i is the client whose turn it is
                     all clients read isturn from the server
                     if isturn, that client writes its card to the server
                     if !isturn, that client doesn't do anything
@@ -168,22 +215,28 @@ int main() {
                     char* isturn_y = "y";
                     char* isturn_n = "n";
                     char buff[1025] = "";
+                    printf("Card on deck: %s\n",toppadeck);
                     for (int j = 0; j < MAX_CLIENTS; j++) {
-                        // Writes card on deck to clients
-                        // Write the last card played to the clients
-                        sem_wait(&lastCardSemaphore);
-                        write(client_sockets[j], simulatedCard, strlen(simulatedCard));
-                        sem_post(&lastCardSemaphore);
-
+                        // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
+                        DEBUG("server trying to write cod\n");
+                        write(client_sockets[j], toppadeck, strlen(toppadeck));
+                        DEBUG("server wrote cod\n");
+                        // COD code ends here
                         if (j == i) {
-                            clientTurn(client_sockets[j], isturn_y, buff, i);
+                            char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
+                            DEBUG("clientTurn result: %s\n",temp);
+                            toppadeck = calloc(strlen(temp),sizeof(char));
+                            strcpy(toppadeck,temp);
+                            //clientTurn(client_sockets[j],isturn_y,buff,i);
                         } else {
+                            DEBUG("Server writing isturn_n to client %d\n",j);
                             write(client_sockets[j], isturn_n, strlen(isturn_n));
                         }
                     }
                 }
                 printf("Round over\n");
             }
+
         }
     }
 
@@ -196,12 +249,57 @@ int main() {
         }
     }
 
-    // Destroy semaphores
-    sem_destroy(&lastCardSemaphore);
-    sem_destroy(&historySemaphore);
-
     free(hints);
     freeaddrinfo(results);
 
+
+    /*struct card * head = create('r', 9);
+    printf("adding a card r9\n");
+    printf("adding a card y0\n");
+    add(head, 'y', 0);
+    printCards(head);
+    printf("adding a card g5\n");
+    add(head, 'g', 5);
+    printCards(head);
+
+    printf("searching for r3\n");
+    if (search(head, 'r', 3)){
+      printf("r3 found\n");
+    } else printf("r3 not found\n");
+    printf("searching for r9\n");
+    if (search(head, 'r', 9)){
+      printf("r9 found\n");
+    } else printf("r9 not found\n");
+
+    printf("removing a card g0\n");
+    if (removeCard(&head, 'g', 0)){
+      printf("g0 removed\n");
+    } else printf("g0 not removed\n");
+    printCards(head);
+    printf("removing a card y0\n");
+    if (removeCard(&head, 'y', 0)){
+      printf("y0 removed\n");
+    } else printf("y0 not removed\n");
+    printCards(head);
+    printf("removing a card r9\n");
+    removeCard(&head, 'r', 9);
+    printCards(head);
+    printf("removing a card g5\n");
+    removeCard(&head, 'g', 5);
+    printCards(head);
+
+
+    printf("\nnew list\n\n");
+    struct card * hand = makeHand(7);
+    printCards(hand);
+    printf("adding a card g5\n");
+    add(hand, 'g', 5);
+    printCards(hand);
+    printf("drawing a card\n");
+    draw(hand);
+    printCards(hand);*/
+
     return 0;
+
+
 }
