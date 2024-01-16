@@ -83,6 +83,10 @@ Adjusted makefile to ensure clean works even if one of the files are missing
 Moved chunks of code into functions
 ~ 1 hour
 
-### 2024-01-14 - Restructuring server-client (cont)
+### 2024-01-15 - Restructuring server-client (cont)
 "It is not your turn" message sends before the client's turn
 ~ 20 mins
+
+### 2024-01-16 - Game rules
+Ending the game
+~ 30 mins

@@ -60,14 +60,26 @@ void clientLogic(int server_socket) {
         fgets(data,100,stdin);
         playable = removeCard(&hand, data[0], data[1] - '0');
       }
+
       printf("Cards in hand:\n");
       int numberOfCards = printCards(hand);
-      write(server_socket,data,strlen(data));
-      if (numberOfCards == 1) {
-        printf("\e[1mUNO!\e[m\n");
-      } else if (numberOfCards == 0) {
+
+      // end of turn conditions: 
+      // w for victory/game end, n for proceeding as normal
+      //trim data
+      data[strlen(data) - 1] = '\0';
+
+      if (numberOfCards == 0) {
         printf("\e[1mGAME OVER!\e[m\n");
+        strcat(data,",w");
+      } else {
+        if (numberOfCards == 1) {
+          printf("\e[1mUNO!\e[m\n");
+        }
+        strcat(data,",n");
       }
+
+      write(server_socket,data,strlen(data));
     } else if (data[0] == 'n') {
       // if not your turn
       DEBUG("Not the client's turn\n");

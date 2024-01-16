@@ -27,10 +27,12 @@ char* clientTurn(int client_socket, char* isturn_y, char*buff, int i) {
     DEBUG("server attempting to read from client\n");
     read(client_socket, buff, sizeof(buff) - 1);
     //trim
+    // trim has been moved to client 
+    /**
     buff[strlen(buff) - 1] = '\0';
     if  (buff[strlen(buff) - 1] == 13) {
         buff[strlen(buff) - 1] = '\0';
-    }
+    }**/
     printf("%s\n",buff);
     DEBUG("Received from client %d: '%s'\n", i + 1, buff);
     return buff;
@@ -135,9 +137,21 @@ int main() {
                         if (j == i) {
                             char* temp = clientTurn(client_sockets[j],isturn_y,buff,i);
                             DEBUG("clientTurn result: %s\n",temp);
+
+                            // adds toppadeck
                             toppadeck = calloc(strlen(temp),sizeof(char));
-                            strcpy(toppadeck,temp);
-                            //clientTurn(client_sockets[j],isturn_y,buff,i);
+                            char* moveToToppa = calloc(10,sizeof(char));
+                            moveToToppa = strtok(temp, ",");
+                            strcpy(toppadeck,moveToToppa);
+                            DEBUG("toppadeck shoudl just be a card: %s\n",toppadeck);
+
+                            // end of turn conditions: 
+                            // w for victory/game end, n for proceeding as normal
+                            //printf("\e[1mGAME OVER!\e[m\n");
+                            //char* data = calloc(10,sizeof(char));
+                            //strcpy(data,temp);
+                            //read(client_sockets[j],data,sizeof(char));
+                            //printf("received gameover from client? %s",data);
                         } else {
                             DEBUG("Server writing isturn_n to client %d\n",j);
                             write(client_sockets[j], isturn_n, strlen(isturn_n));
