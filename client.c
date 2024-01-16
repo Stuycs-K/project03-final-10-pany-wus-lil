@@ -8,18 +8,20 @@ void clientIsKil() {
 
 void clientLogic(int server_socket) {
   // ****** CARDS APPEAR AS SOON AS THE CLIENT CONNECTS *********
-  // reads card on deck
-  /*DEBUG("client attempting to read card on deck\n");
-  read(server_socket,data,100);
-  printf("Card on deck: %s\n",data);*/
 
   struct card * hand = makeHand(7);
   printf("Cards in hand:\n");
   printCards(hand);
+  int notTurnCounter = 0;
 
-  while (1) {
+  int inProgress = 1;
 
-    //sleep(1); // prevents spam
+  while (inProgress == 1) {
+
+    if (notTurnCounter == 0){
+      printf("It is not your turn. Please wait.\n");
+      notTurnCounter = 1;
+    }
     char* data = calloc(100,sizeof(char));
 
     // COD code here (MAKE SURE TO COMMENT OUT IF DOES NOT WORK)
@@ -40,6 +42,7 @@ void clientLogic(int server_socket) {
 
     // if read is unsuccessful (server is dead), kill
     if (read_result != 1) {
+      printf("You lost... sucks to suck lol\n");
       break;
     }
 
@@ -79,31 +82,32 @@ void clientLogic(int server_socket) {
       }
       printf("\nCards in hand:\n");
       int numberOfCards = printCards(hand);
-      write(server_socket,data,strlen(data));
-      if (numberOfCards == 1) {
-        printf("\e[1mUNO!\e[m\n");
-      } else if (numberOfCards == 0) {
+
+      // end of turn conditions:
+      // w for victory/game end, n for proceeding as normal
+      //trim data
+      data[strlen(data) - 1] = '\0';
+
+      if (numberOfCards == 0) {
         printf("\e[1mGAME OVER!\e[m\n");
+        strcat(data,",w");
+        printf("You won :)\n");
+        inProgress = 0;
+      } else {
+        if (numberOfCards == 1) {
+          printf("\e[1mUNO!\e[m\n");
+        }
+        strcat(data,",n");
       }
+
+      write(server_socket,data,strlen(data));
     } else if (data[0] == 'n') {
       // if not your turn
       DEBUG("Not the client's turn\n");
     } else {
       clientIsKil();
     }
-
-    //DEBUG("isturn split over\n");
   }
-    /**
-    char* data = calloc(100,sizeof(char));
-    fgets(data,100,stdin);
-    printf("Client attemping to write to server\n");
-    write(server_socket,data,strlen(data));
-    printf("Client wrote to server\n");
-    printf("Client attempting to read server\n");
-    read(server_socket,data,8);
-    // c'est un trimmer
-    // data[strlen(data)-1] = ' ';**/
 }
 
 int clienthandshake(char* server_address) {

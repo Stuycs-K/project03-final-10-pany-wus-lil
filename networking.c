@@ -70,6 +70,7 @@ bool removeCard(struct card ** head, char _color, int num){
           temp = current->next;
           current->next = temp->next;
           free(temp);
+          break;
         }
         current = current->next;
       }
@@ -109,4 +110,38 @@ bool matches(char card1Color, int card1Num, char card2Color, int card2Num){
     return true;
   }
   return false;
+}
+
+int server_setup() {
+    struct addrinfo *hints, *results;
+    hints = calloc(1, sizeof(struct addrinfo));
+    char* PORT = "9998";
+    hints->ai_family = AF_INET;
+    hints->ai_socktype = SOCK_STREAM; // TCP socket
+    hints->ai_flags = AI_PASSIVE; // only needed on server
+    getaddrinfo(NULL, PORT, hints, &results); // NULL is localhost or 127.0.0.1
+
+    //create socket
+    int listen_socket = socket(results->ai_family, results->ai_socktype, results->ai_protocol);
+
+    //free port after program exit
+    int yes = 1;
+    if (setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+        printf("sockopt  error\n");
+        printf("%s\n", strerror(errno));
+        exit(-1);
+    }
+
+    int err = bind(listen_socket, results->ai_addr, results->ai_addrlen);
+    if(err == -1){
+        printf("Error binding: %s", strerror(errno));
+        exit(1);
+    }
+    listen(listen_socket, MAX_CLIENTS); // Maximum # of clients that can connect
+    printf("Listening on port %s\n", PORT);
+
+  free(hints);
+  freeaddrinfo(results);
+
+  return listen_socket;
 }
